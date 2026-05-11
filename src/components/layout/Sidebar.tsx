@@ -27,6 +27,11 @@ export default function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const handleLogout = () => {
+    localStorage.removeItem('access_token');
+    navigate('/login');
+  };
+
   return (
     <aside className="cms-sidebar">
       <p className="cms-sidebar__section-label">Main Menu</p>
@@ -56,18 +61,10 @@ export default function Sidebar() {
       <div
         className="nav-item"
         style={{ color: '#f87171' }}
-        onClick={() => {
-          localStorage.removeItem('access_token');
-          navigate('/login');
-        }}
+        onClick={handleLogout}
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            localStorage.removeItem('access_token');
-            navigate('/login');
-          }
-        }}
+        onKeyDown={(e) => e.key === 'Enter' && handleLogout()}
       >
         <span className="nav-icon"><LogOut size={18} /></span>
         Logout
