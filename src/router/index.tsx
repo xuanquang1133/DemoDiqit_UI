@@ -2,7 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router";
 import AuthLayout from "../layouts/AuthLayout";
 
 // Auth pages
-import LoginPage from "../pages/auth/LoginPage";
+import LoginPage from "../pages/login";
 
 // Fallback
 import NotFoundPage from "../pages/NotFoundPage";
