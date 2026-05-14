@@ -5,17 +5,7 @@ import { ShoppingBagIcon } from '../../components/icons/ShoppingBagIcon';
 import { CustomButton } from '../../components/common/CustomButton';
 import { AxiosError } from 'axios';
 
-interface LoginResponse {
-  message?: string;
-  data?: {
-    id?: number;
-    username?: string;
-    email?: string;
-    full_name?: string;
-    roles?: string[];
-    access_token?: string;
-  };
-}
+import type { LoginResponse } from '../../types/login';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -30,7 +20,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const response = (await login({ email, password })) as LoginResponse;
+      const response = (await login({ email, password })) as unknown as LoginResponse;
       
       // Extract the access_token from the standard API response structure
       const token = response?.data?.access_token;
