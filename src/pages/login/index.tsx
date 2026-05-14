@@ -6,10 +6,14 @@ import { CustomButton } from '../../components/common/CustomButton';
 import { AxiosError } from 'axios';
 
 interface LoginResponse {
-  token?: string;
-  access_token?: string;
+  message?: string;
   data?: {
-    token?: string;
+    id?: number;
+    username?: string;
+    email?: string;
+    full_name?: string;
+    roles?: string[];
+    access_token?: string;
   };
 }
 
@@ -28,9 +32,8 @@ export default function LoginPage() {
     try {
       const response = (await login({ email, password })) as LoginResponse;
       
-      // Handle the token depending on the API response structure
-      // axiosClient already returns response.data
-      const token = response?.token || response?.data?.token || response?.access_token;
+      // Extract the access_token from the standard API response structure
+      const token = response?.data?.access_token;
       
       if (token) {
         localStorage.setItem('access_token', token);
