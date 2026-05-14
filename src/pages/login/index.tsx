@@ -20,10 +20,10 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const response = (await login({ email, password })) as unknown as LoginResponse;
+      const response = await login({ email, password });
       
       // Extract the access_token from the standard API response structure
-      const token = response?.data?.access_token;
+      const token = response.data.access_token;
       
       if (token) {
         localStorage.setItem('access_token', token);
@@ -33,7 +33,7 @@ export default function LoginPage() {
       navigate('/dashboard');
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
-      setError(err.response?.data?.message || err.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
+      setError(err.response?.data?.message || '');
     } finally {
       setIsLoading(false);
     }
