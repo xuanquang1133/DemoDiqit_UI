@@ -1,15 +1,17 @@
 import axiosClient from "../axiosClient";
 import type { User } from "../../types/auth";
-import type { MeResponse } from "../../types/login";
+import type { UserInfoByTokenResponse } from "../../types/login";
 
-export const getMe = async (): Promise<User> => {
-  const response = await axiosClient.get<any, MeResponse>("/user-info-by-token");
-  const data = response.data;
+/**
+ * Fetch authenticated user information using JWT token from Authorization header
+ */
+export const getUserInfoByToken = async (): Promise<User> => {
+  const response = await axiosClient.get<any, UserInfoByTokenResponse>("/user-info-by-token");
   return {
-    id: data.id,
-    username: data.username,
-    email: data.email,
-    full_name: data.full_name,
-    roles: data.roles,
+    id: response.data.id,
+    username: response.data.username,
+    email: response.data.email,
+    full_name: response.data.full_name,
+    roles: response.data.roles,
   };
 };
