@@ -14,3 +14,14 @@ export interface LoginResponse {
     access_token: string;
   };
 }
+
+export interface MeResponse {
+  message: string;
+  data: {
+    id: number;
+    username: string;
+    email: string;
+    full_name: string;
+    roles: string[];
+  };
+}
