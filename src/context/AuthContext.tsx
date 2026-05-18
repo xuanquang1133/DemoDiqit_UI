@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, type FC, type ReactNode } from "react";
 import type { User, AuthContextType } from "../types/auth";
-import { getMe } from "../api/auth/me";
+import { getUserInfoByToken } from "../api/auth/me";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -15,7 +15,7 @@ export const AuthProvider: FC<{ children: ReactNode }> = ({ children }) => {
       if (token) {
         try {
           // Verify token and fetch the latest user data
-          const userData = await getMe();
+          const userData = await getUserInfoByToken();
           setUser(userData);
           setIsAuthenticated(true);
         } catch (error) {

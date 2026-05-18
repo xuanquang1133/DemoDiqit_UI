@@ -15,7 +15,7 @@ export interface LoginResponse {
   };
 }
 
-export interface MeResponse {
+export interface UserInfoByTokenResponse {
   message: string;
   data: {
     id: number;
