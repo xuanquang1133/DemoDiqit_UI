@@ -14,3 +14,8 @@ export interface LoginResponse {
     access_token: string;
   };
 }
+
+export interface UserInfoByTokenResponse {
+  message: string;
+  data: UserInfoByToken;
+}
