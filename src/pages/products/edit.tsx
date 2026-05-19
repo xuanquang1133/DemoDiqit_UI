@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
-import ProductForm from "../../components/products/ProductForm";
+import ProductForm from "./components/ProductForm";
 import type { Product } from "../../types/product";
 import { getProduct } from "../../api/product";
 import { SpinnerIcon } from "../../components/icons";
 
-export default function ProductEditPage() {
+export default function EditPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 

@@ -4,7 +4,7 @@ import type { Product } from "../../types/product";
 import { getProduct } from "../../api/product";
 import { ChevronLeftIcon, ImageIcon, SpinnerIcon } from "../../components/icons";
 
-export default function ProductDetailPage() {
+export default function DetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 

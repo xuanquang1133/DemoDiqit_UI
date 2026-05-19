@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { CustomButton } from "../common/CustomButton";
-import { SpinnerIcon } from "../icons";
-import { generateSKU } from "../../utils/slug";
-import type { Product, CreateProductRequest, UpdateProductRequest } from "../../types/product";
+import { CustomButton } from "../../../components/common/CustomButton";
+import { SpinnerIcon } from "../../../components/icons";
+import { generateSKU } from "../../../utils/slug";
+import type { Product, CreateProductRequest, UpdateProductRequest } from "../../../types/product";
 
 interface ProductFormProps {
   mode: "create" | "edit";
@@ -109,10 +109,10 @@ export default function ProductForm({
 
     try {
       if (mode === "create") {
-        const { createProduct } = await import("../../api/product");
+        const { createProduct } = await import("../../../api/product");
         await createProduct(formData);
       } else {
-        const { updateProduct } = await import("../../api/product");
+        const { updateProduct } = await import("../../../api/product");
         if (initialData) {
           const data: UpdateProductRequest = { ...formData };
           await updateProduct(initialData.id, data);
