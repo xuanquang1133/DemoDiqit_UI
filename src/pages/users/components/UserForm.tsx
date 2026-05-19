@@ -22,6 +22,9 @@ export default function UserForm({ initialData, onSubmit, isLoading, isEdit = fa
     is_active: true,
     ...initialData,
   });
+  const [confirmPassword, setConfirmPassword] = useState('');
+  
+  const passwordMismatch = !isEdit && confirmPassword !== '' && formData.password !== confirmPassword;
 
   useEffect(() => {
     if (initialData) {
@@ -51,6 +54,10 @@ export default function UserForm({ initialData, onSubmit, isLoading, isEdit = fa
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (!isEdit && formData.password !== confirmPassword) {
+      alert('Passwords do not match!');
+      return;
+    }
     await onSubmit(formData);
   };
 
@@ -76,14 +83,25 @@ export default function UserForm({ initialData, onSubmit, isLoading, isEdit = fa
         />
 
         {!isEdit && (
-          <Input
-            label="Password *"
-            type="password"
-            name="password"
-            value={formData.password || ''}
-            onChange={handleChange}
-            required={!isEdit}
-          />
+          <>
+            <Input
+              label="Password *"
+              type="password"
+              name="password"
+              value={formData.password || ''}
+              onChange={handleChange}
+              required={!isEdit}
+            />
+            <Input
+              label="Confirm Password *"
+              type="password"
+              name="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required={!isEdit}
+              error={passwordMismatch ? 'Passwords do not match' : undefined}
+            />
+          </>
         )}
 
         <Input
@@ -135,7 +153,7 @@ export default function UserForm({ initialData, onSubmit, isLoading, isEdit = fa
         </button>
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || passwordMismatch}
           className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
         >
           {isLoading ? 'Saving...' : 'Save User'}
