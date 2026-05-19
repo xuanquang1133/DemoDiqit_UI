@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { CustomButton } from "../common/CustomButton";
 import { SpinnerIcon } from "../icons";
+import { generateSKU } from "../../utils/slug";
 import type { Product, CreateProductRequest, UpdateProductRequest } from "../../types/product";
 
 interface ProductFormProps {
@@ -27,6 +28,7 @@ export default function ProductForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [apiError, setApiError] = useState<string>("");
+  const [skuEdited, setSkuEdited] = useState(false);
 
   useEffect(() => {
     if (initialData && mode === "edit") {
@@ -38,17 +40,41 @@ export default function ProductForm({
         sale_price: initialData.sale_price,
         thumbnail: initialData.thumbnail,
       });
+      setSkuEdited(true);
     }
   }, [initialData, mode]);
+
+  const handleNameChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, name: value }));
+    if (!skuEdited && value.trim()) {
+      setFormData((prev) => ({ ...prev, sku: generateSKU(value) }));
+    }
+    if (errors.name) {
+      setErrors((prev) => ({ ...prev, name: "" }));
+    }
+  };
+
+  const handleSKUChange = (value: string) => {
+    setSkuEdited(true);
+    setFormData((prev) => ({ ...prev, sku: value }));
+    if (errors.sku) {
+      setErrors((prev) => ({ ...prev, sku: "" }));
+    }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev: CreateProductRequest) => ({ ...prev, [name]: value }));
-    // Clear error when user types
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
+    if (name === "name") {
+      handleNameChange(value);
+    } else if (name === "sku") {
+      handleSKUChange(value);
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+      if (errors[name]) {
+        setErrors((prev) => ({ ...prev, [name]: "" }));
+      }
     }
   };
 
@@ -123,7 +149,7 @@ export default function ProductForm({
             id="name"
             name="name"
             value={formData.name}
-            onChange={handleChange}
+            onChange={(e) => handleNameChange(e.target.value)}
             className={`w-full rounded-lg border px-4 py-2.5 text-sm transition focus:outline-none focus:ring-2 ${
               errors.name
                 ? "border-red-300 focus:border-red-500 focus:ring-red-200"
@@ -144,11 +170,15 @@ export default function ProductForm({
             id="sku"
             name="sku"
             value={formData.sku}
-            onChange={handleChange}
+            onChange={(e) => handleSKUChange(e.target.value)}
             className="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
-            placeholder="Auto-generated if empty"
+            placeholder="Auto-generated from name"
           />
-          <p className="mt-1 text-xs text-slate-400">Leave empty to auto-generate SKU</p>
+          <p className="mt-1 text-xs text-slate-400">
+            {skuEdited
+              ? "Custom SKU - will not auto-regenerate when name changes"
+              : "Auto-generated from product name. Edit to override."}
+          </p>
         </div>
 
         {/* Description */}
