@@ -3,6 +3,8 @@ import type { ChangeEvent, FormEvent } from 'react';
 import type { User } from '../../../types/user';
 import { Input } from '../../../components/common/Input';
 import { SwitchButton } from '../../../components/common/SwitchButton';
+import { CustomButton } from '../../../components/common/CustomButton';
+import toast from 'react-hot-toast';
 
 interface UserFormProps {
   initialData?: Partial<User>;
@@ -55,7 +57,7 @@ export default function UserForm({ initialData, onSubmit, isLoading, isEdit = fa
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!isEdit && formData.password !== confirmPassword) {
-      alert('Passwords do not match!');
+      toast.error('Passwords do not match!');
       return;
     }
     await onSubmit(formData);
@@ -132,32 +134,22 @@ export default function UserForm({ initialData, onSubmit, isLoading, isEdit = fa
         </div>
       </div>
 
-      {!isEdit && (
-        <div className="pt-2">
-          <SwitchButton
-            name="is_active"
-            checked={!!formData.is_active}
-            onChange={handleChange}
-            label="Active"
-          />
-        </div>
-      )}
+      <div className="pt-2">
+        <SwitchButton
+          name="is_active"
+          checked={!!formData.is_active}
+          onChange={handleChange}
+          label="Active"
+        />
+      </div>
 
       <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
-        <button
-          type="button"
-          onClick={() => window.history.back()}
-          className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200"
-        >
+        <CustomButton variant="secondary" onClick={() => window.history.back()}>
           Cancel
-        </button>
-        <button
-          type="submit"
-          disabled={isLoading || passwordMismatch}
-          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-        >
+        </CustomButton>
+        <CustomButton type="submit" disabled={isLoading || passwordMismatch}>
           {isLoading ? 'Saving...' : 'Save User'}
-        </button>
+        </CustomButton>
       </div>
     </form>
   );

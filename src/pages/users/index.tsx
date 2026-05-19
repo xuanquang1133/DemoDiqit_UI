@@ -8,6 +8,9 @@ import { TrashIcon } from '../../components/icons/TrashIcon';
 import { PlusIcon } from '../../components/icons/PlusIcon';
 import { SearchIcon } from '../../components/icons/SearchIcon';
 import { SwitchButton } from '../../components/common/SwitchButton';
+import { CustomButton } from '../../components/common/CustomButton';
+import { Select } from '../../components/common/Select';
+import toast from 'react-hot-toast';
 
 export default function UserListPage() {
   const navigate = useNavigate();
@@ -69,9 +72,10 @@ export default function UserListPage() {
           items: data.items.map((u) => (u.id === user.id ? { ...u, is_active: !u.is_active } : u)),
         });
       }
+      toast.success('Status updated successfully');
     } catch (error: any) {
       const msg = error.response?.data?.message || 'Failed to update status';
-      alert(msg);
+      toast.error(msg);
       console.error('Failed to update status', error);
     }
   };
@@ -82,10 +86,11 @@ export default function UserListPage() {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
         await userApi.deleteUser(id);
+        toast.success('User deleted successfully');
         fetchUsers();
       } catch (error: any) {
         const msg = error.response?.data?.message || 'Failed to delete user';
-        alert(msg);
+        toast.error(msg);
         console.error('Failed to delete user', error);
       }
     }
@@ -109,13 +114,10 @@ export default function UserListPage() {
           <h1 className="text-2xl font-bold text-slate-900">Users Management</h1>
           <p className="text-sm text-slate-500 mt-1">Total: {data?.total || 0} users</p>
         </div>
-        <button
-          onClick={() => navigate('/users/create')}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
-        >
+        <CustomButton onClick={() => navigate('/users/create')}>
           <PlusIcon size={18} />
           Add User
-        </button>
+        </CustomButton>
       </div>
 
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
@@ -135,26 +137,26 @@ export default function UserListPage() {
               />
             </div>
 
-            <select
+            <Select
               value={filters.role}
               onChange={(e) => setFilters({ ...filters, role: e.target.value, page: 1 })}
-              className="border border-slate-300 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-            >
-              <option value="All">Role: All</option>
-              <option value="Admin">Admin</option>
-              <option value="Customer">Customer</option>
-              <option value="Manager">Manager</option>
-            </select>
+              options={[
+                { value: 'All', label: 'Role: All' },
+                { value: 'Admin', label: 'Admin' },
+                { value: 'Customer', label: 'Customer' },
+                { value: 'Manager', label: 'Manager' },
+              ]}
+            />
 
-            <select
+            <Select
               value={filters.status}
               onChange={(e) => setFilters({ ...filters, status: e.target.value, page: 1 })}
-              className="border border-slate-300 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-            >
-              <option value="All">Status: All</option>
-              <option value="active">Active</option>
-              <option value="blocked">Blocked</option>
-            </select>
+              options={[
+                { value: 'All', label: 'Status: All' },
+                { value: 'active', label: 'Active' },
+                { value: 'blocked', label: 'Blocked' },
+              ]}
+            />
           </div>
         </div>
 
@@ -204,20 +206,20 @@ export default function UserListPage() {
                     </td>
                     <td className="px-6 py-4 text-sm text-slate-500">
                       <div className="flex items-center gap-3">
-                        <button
+                        <CustomButton
+                          variant="ghost"
+                          className="!px-2 !py-1"
                           onClick={() => navigate(`/users/update/${user.id}`)}
-                          className="flex items-center gap-1 text-blue-600 hover:text-blue-800 transition-colors font-medium"
                         >
-                          <EditIcon size={16} />
-                          Edit
-                        </button>
-                        <button
+                          <EditIcon size={16} /> Edit
+                        </CustomButton>
+                        <CustomButton
+                          variant="danger"
+                          className="!px-2 !py-1"
                           onClick={() => handleDelete(user.id)}
-                          className="flex items-center gap-1 text-red-500 hover:text-red-700 transition-colors font-medium"
                         >
-                          <TrashIcon size={16} />
-                          Delete
-                        </button>
+                          <TrashIcon size={16} /> Delete
+                        </CustomButton>
                       </div>
                     </td>
                   </tr>
