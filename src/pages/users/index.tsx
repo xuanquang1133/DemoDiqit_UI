@@ -74,7 +74,9 @@ export default function UserListPage() {
           items: data.items.map((u) => (u.id === user.id ? { ...u, is_active: !u.is_active } : u)),
         });
       }
-    } catch (error) {
+    } catch (error: any) {
+      const msg = error.response?.data?.message || 'Failed to update status';
+      alert(msg);
       console.error('Failed to update status', error);
     }
   };
@@ -84,7 +86,9 @@ export default function UserListPage() {
       try {
         await userApi.deleteUser(id);
         fetchUsers();
-      } catch (error) {
+      } catch (error: any) {
+        const msg = error.response?.data?.message || 'Failed to delete user';
+        alert(msg);
         console.error('Failed to delete user', error);
       }
     }
