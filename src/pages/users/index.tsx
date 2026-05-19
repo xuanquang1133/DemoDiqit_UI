@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 
 import { useNavigate } from 'react-router';
 import { userApi } from '../../api/user';
-import type { User, PaginatedData } from '../../types/user';
+import type { User } from '../../types/user';
+import type { PaginatedData } from '../../types/common';
 import { EditIcon } from '../../components/icons/EditIcon';
 import { TrashIcon } from '../../components/icons/TrashIcon';
 import { PlusIcon } from '../../components/icons/PlusIcon';
