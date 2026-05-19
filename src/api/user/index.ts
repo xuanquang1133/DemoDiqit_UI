@@ -1,5 +1,6 @@
 import axiosClient from '../axiosClient';
-import type { User, PaginatedData, ApiResponse } from '../../types/user';
+import type { User } from '../../types/user';
+import type { PaginatedData, ApiResponse } from '../../types/common';
 
 export const userApi = {
   getUsers(params?: { page?: number; limit?: number; keyword?: string; role?: string; is_active?: boolean }): Promise<ApiResponse<PaginatedData<User>>> {

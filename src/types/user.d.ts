@@ -7,17 +7,3 @@ export interface User {
   is_active: boolean;
   created_at: string;
 }
-
-export interface PaginatedData<T> {
-  items: T[];
-  total: number;
-  page: number;
-  limit: number;
-  total_pages: number;
-}
-
-export interface ApiResponse<T> {
-  code?: string;
-  message: string;
-  data: T;
-}
