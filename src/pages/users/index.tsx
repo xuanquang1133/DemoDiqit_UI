@@ -55,6 +55,23 @@ export default function UserListPage() {
     setFilters({ ...filters, page: newPage });
   };
 
+  const handleStatusToggle = async (user: User) => {
+    try {
+      await userApi.updateStatus(user.id, !user.is_active);
+      // Optimistic update
+      if (data) {
+        setData({
+          ...data,
+          items: data.items.map((u) => (u.id === user.id ? { ...u, is_active: !u.is_active } : u)),
+        });
+      }
+    } catch (error: any) {
+      const msg = error.response?.data?.message || 'Failed to update status';
+      alert(msg);
+      console.error('Failed to update status', error);
+    }
+  };
+
 
 
   const handleDelete = async (id: number) => {
@@ -71,6 +88,20 @@ export default function UserListPage() {
   };
 
 
+
+  const renderStatusSwitch = (user: User) => {
+    return (
+      <label className="relative inline-flex items-center cursor-pointer">
+        <input 
+          type="checkbox" 
+          className="sr-only peer" 
+          checked={user.is_active}
+          onChange={() => handleStatusToggle(user)}
+        />
+        <div className="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+      </label>
+    );
+  };
 
   return (
     <div className="p-6 h-full flex flex-col bg-slate-50/50">
@@ -122,9 +153,8 @@ export default function UserListPage() {
               className="border border-slate-300 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
             >
               <option value="All">Status: All</option>
-              <option value="Active">Active</option>
-              <option value="Blocked">Blocked</option>
-              <option value="Pending">Pending</option>
+              <option value="active">Active</option>
+              <option value="blocked">Blocked</option>
             </select>
           </div>
         </div>
@@ -166,13 +196,12 @@ export default function UserListPage() {
                       {user.roles && user.roles.join(', ')}
                     </td>
                     <td className="px-6 py-4 text-sm">
-                      <span className={`text-xs font-medium px-2 py-1 rounded-full ${
-                        user.status === 'Active' ? 'bg-green-100 text-green-700' : 
-                        user.status === 'Blocked' ? 'bg-red-100 text-red-700' : 
-                        'bg-yellow-100 text-yellow-700'
-                      }`}>
-                        {user.status || 'Active'}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        {renderStatusSwitch(user)}
+                        <span className={`text-xs font-medium px-2 py-1 rounded-full ${user.is_active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                          {user.is_active ? 'Active' : 'Blocked'}
+                        </span>
+                      </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-slate-500">
                       {new Date(user.created_at).toISOString().split('T')[0]}
