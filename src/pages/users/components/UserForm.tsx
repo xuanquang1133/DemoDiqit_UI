@@ -13,7 +13,7 @@ interface UserFormProps {
   isEdit?: boolean;
 }
 
-const ROLES = ['Admin', 'Customer', 'Manager'];
+import { ROLE_OPTIONS } from '../../../constants';
 
 export default function UserForm({ initialData, onSubmit, isLoading, isEdit = false }: UserFormProps) {
   const [formData, setFormData] = useState<Partial<User> & { password?: string }>({
@@ -118,7 +118,7 @@ export default function UserForm({ initialData, onSubmit, isLoading, isEdit = fa
       <div>
         <label className="block text-sm font-medium text-slate-700 mb-2">Roles</label>
         <div className="flex flex-wrap gap-4">
-          {ROLES.map((role) => (
+          {ROLE_OPTIONS.map((role) => (
             <label key={role} className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"

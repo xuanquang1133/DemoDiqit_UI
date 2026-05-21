@@ -10,7 +10,7 @@ import { PlusIcon } from '../../components/icons/PlusIcon';
 import { SearchIcon } from '../../components/icons/SearchIcon';
 import { SwitchButton } from '../../components/common/SwitchButton';
 import { CustomButton } from '../../components/common/CustomButton';
-import { STATUS_FILTER_OPTIONS } from '../../constants';
+import { STATUS_FILTER_OPTIONS, ROLE_FILTER_OPTIONS } from '../../constants';
 import toast from 'react-hot-toast';
 
 export default function UserListPage() {
@@ -146,12 +146,7 @@ export default function UserListPage() {
               onChange={(e) => setFilters({ ...filters, role: e.target.value, page: 1 })}
               className="px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white min-w-[120px]"
             >
-              {[
-                { value: 'All', label: 'Role: All' },
-                { value: 'Admin', label: 'Admin' },
-                { value: 'Customer', label: 'Customer' },
-                { value: 'Manager', label: 'Manager' },
-              ].map((opt) => (
+              {ROLE_FILTER_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
                 </option>
