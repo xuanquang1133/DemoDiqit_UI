@@ -10,6 +10,7 @@ import { PlusIcon } from '../../components/icons/PlusIcon';
 import { SearchIcon } from '../../components/icons/SearchIcon';
 import { SwitchButton } from '../../components/common/SwitchButton';
 import { CustomButton } from '../../components/common/CustomButton';
+import { Select } from '../../components/common/Select';
 import { STATUS_FILTER_OPTIONS, ROLE_FILTER_OPTIONS } from '../../constants';
 import toast from 'react-hot-toast';
 
@@ -141,29 +142,17 @@ export default function UserListPage() {
               />
             </div>
 
-            <select
+            <Select
               value={filters.role}
               onChange={(e) => setFilters({ ...filters, role: e.target.value, page: 1 })}
-              className="px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white min-w-[120px]"
-            >
-              {ROLE_FILTER_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              options={ROLE_FILTER_OPTIONS}
+            />
 
-            <select
+            <Select
               value={filters.status}
               onChange={(e) => setFilters({ ...filters, status: e.target.value, page: 1 })}
-              className="px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white min-w-[120px]"
-            >
-              {STATUS_FILTER_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              options={STATUS_FILTER_OPTIONS}
+            />
           </div>
         </div>
 
