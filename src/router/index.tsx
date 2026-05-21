@@ -11,6 +11,10 @@ import UserListPage from "../pages/users/index";
 import CreateUserPage from "../pages/users/create";
 import UpdateUserPage from "../pages/users/update";
 
+import CategoryListPage from "../pages/categories/index";
+import CreateCategoryPage from "../pages/categories/create";
+import UpdateCategoryPage from "../pages/categories/update";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -51,6 +55,18 @@ export const router = createBrowserRouter([
           {
             path: "/users/update/:id",
             element: <UpdateUserPage />,
+          },
+          {
+            path: "/categories",
+            element: <CategoryListPage />,
+          },
+          {
+            path: "/categories/create",
+            element: <CreateCategoryPage />,
+          },
+          {
+            path: "/categories/update/:id",
+            element: <UpdateCategoryPage />,
           },
         ],
       },
