@@ -19,12 +19,30 @@ export const getProduct = async (id: number): Promise<Product> => {
 
 // Create a new product
 export const createProduct = async (data: CreateProductRequest): Promise<Product> => {
-  return axiosClient.post<any, Product>("/products", data);
+  const payload = {
+    name: data.name,
+    slug: data.slug,
+    sku: data.sku,
+    description: data.description,
+    price: Number(data.price) || 0,
+    sale_price: data.sale_price ? Number(data.sale_price) : null,
+    thumbnail: data.thumbnail,
+  };
+  return axiosClient.post<any, Product>("/products", payload);
 };
 
 // Update an existing product
 export const updateProduct = async (id: number, data: UpdateProductRequest): Promise<Product> => {
-  return axiosClient.put<any, Product>(`/products/${id}`, data);
+  const payload = {
+    name: data.name,
+    slug: data.slug,
+    sku: data.sku,
+    description: data.description,
+    price: data.price !== undefined ? Number(data.price) : undefined,
+    sale_price: data.sale_price ? Number(data.sale_price) : undefined,
+    thumbnail: data.thumbnail,
+  };
+  return axiosClient.put<any, Product>(`/products/${id}`, payload);
 };
 
 // Delete a product (soft delete)

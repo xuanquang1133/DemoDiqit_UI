@@ -5,8 +5,8 @@ export interface Product {
   slug: string;
   sku: string;
   description: string;
-  price: string;
-  sale_price: string;
+  price: number;
+  sale_price: number;
   thumbnail: string;
   is_active: boolean;
   created_at: string;

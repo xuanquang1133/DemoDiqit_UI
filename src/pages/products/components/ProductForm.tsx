@@ -40,8 +40,8 @@ export default function ProductForm({
         slug: initialData.slug,
         sku: initialData.sku,
         description: initialData.description,
-        price: initialData.price,
-        sale_price: initialData.sale_price,
+        price: String(initialData.price),
+        sale_price: initialData.sale_price ? String(initialData.sale_price) : "",
         thumbnail: initialData.thumbnail,
       });
       setSkuEdited(false);
@@ -84,14 +84,15 @@ export default function ProductForm({
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
+    const stringValue = String(value ?? "");
     if (name === "name") {
-      handleNameChange(value);
+      handleNameChange(stringValue);
     } else if (name === "slug") {
-      handleSlugChange(value);
+      handleSlugChange(stringValue);
     } else if (name === "sku") {
-      handleSKUChange(value);
+      handleSKUChange(stringValue);
     } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+      setFormData((prev) => ({ ...prev, [name]: stringValue }));
       if (errors[name]) {
         setErrors((prev) => ({ ...prev, [name]: "" }));
       }
@@ -104,9 +105,9 @@ export default function ProductForm({
     if (!formData.name.trim()) {
       newErrors.name = "Product name is required";
     }
-    if (!formData.slug.trim()) {
+    if (!formData.slug?.trim()) {
       newErrors.slug = "Slug is required";
-    } else if (!/^[a-z0-9-]+$/.test(formData.slug)) {
+    } else if (!/^[a-z0-9-]+$/.test(formData.slug!)) {
       newErrors.slug = "Slug can only contain lowercase letters, numbers, and hyphens";
     }
     if (!formData.price.trim()) {
