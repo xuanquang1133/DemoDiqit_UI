@@ -66,7 +66,7 @@ export default function CategoryForm({ initialData, onSubmit, isLoading, isEdit 
         <SwitchButton
           name="is_active"
           checked={!!formData.is_active}
-          onChange={handleSwitchChange}
+          onChange={(e) => handleSwitchChange('is_active', e.target.checked)}
           label="Active"
         />
       </div>

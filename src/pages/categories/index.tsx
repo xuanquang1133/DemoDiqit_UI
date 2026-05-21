@@ -10,7 +10,7 @@ import { PlusIcon } from '../../components/icons/PlusIcon';
 import { SearchIcon } from '../../components/icons/SearchIcon';
 import { SwitchButton } from '../../components/common/SwitchButton';
 import { CustomButton } from '../../components/common/CustomButton';
-import { Select } from '../../components/common/Select';
+import { STATUS_FILTER_OPTIONS } from '../../constants';
 import toast from 'react-hot-toast';
 
 export default function CategoryListPage() {
@@ -27,7 +27,10 @@ export default function CategoryListPage() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setFilters((prev) => ({ ...prev, keyword, page: 1 }));
+      setFilters((prev) => {
+        if (prev.keyword === keyword) return prev;
+        return { ...prev, keyword, page: 1 };
+      });
     }, 300);
     return () => clearTimeout(timer);
   }, [keyword]);
@@ -132,15 +135,17 @@ export default function CategoryListPage() {
               />
             </div>
 
-            <Select
+            <select
               value={filters.status}
               onChange={(e) => setFilters({ ...filters, status: e.target.value, page: 1 })}
-              options={[
-                { value: 'All', label: 'Status: All' },
-                { value: 'active', label: 'Active' },
-                { value: 'inactive', label: 'Inactive' },
-              ]}
-            />
+              className="px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-white min-w-[120px]"
+            >
+              {STATUS_FILTER_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
