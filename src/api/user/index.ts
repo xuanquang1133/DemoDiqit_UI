@@ -20,5 +20,6 @@ export const userApi = {
   },
   updateStatus(id: number, isActive: boolean): Promise<ApiResponse<User>> {
     return axiosClient.patch(`/users/${id}/status`, { is_active: isActive });
+    
   }
 };

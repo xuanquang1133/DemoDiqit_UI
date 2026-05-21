@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 
 import { useNavigate } from 'react-router';
-import { userApi } from '../../api/user';
-import type { User } from '../../types/user';
+import { categoryApi } from '../../api/category';
+import type { Category } from '../../types/category';
 import type { PaginatedData } from '../../types/common';
 import { EditIcon } from '../../components/icons/EditIcon';
 import { TrashIcon } from '../../components/icons/TrashIcon';
@@ -11,17 +11,16 @@ import { SearchIcon } from '../../components/icons/SearchIcon';
 import { SwitchButton } from '../../components/common/SwitchButton';
 import { CustomButton } from '../../components/common/CustomButton';
 import { Select } from '../../components/common/Select';
-import { STATUS_FILTER_OPTIONS, ROLE_FILTER_OPTIONS } from '../../constants';
+import { STATUS_FILTER_OPTIONS } from '../../constants';
 import toast from 'react-hot-toast';
 
-export default function UserListPage() {
+export default function CategoryListPage() {
   const navigate = useNavigate();
-  const [data, setData] = useState<PaginatedData<User> | null>(null);
+  const [data, setData] = useState<PaginatedData<Category> | null>(null);
   const [loading, setLoading] = useState(false);
   const [keyword, setKeyword] = useState('');
   const [filters, setFilters] = useState({
     keyword: '',
-    role: 'All',
     status: 'All',
     page: 1,
     limit: 10,
@@ -38,25 +37,24 @@ export default function UserListPage() {
   }, [keyword]);
 
   useEffect(() => {
-    fetchUsers();
+    fetchCategories();
   }, [filters]);
 
-  const fetchUsers = async () => {
+  const fetchCategories = async () => {
     setLoading(true);
     try {
       const params: any = {
         page: filters.page,
         limit: filters.limit,
         keyword: filters.keyword,
-        role: filters.role,
       };
       if (filters.status !== 'All') {
         params.is_active = filters.status === 'active';
       }
-      const res = await userApi.getUsers(params);
+      const res = await categoryApi.getCategories(params);
       setData(res.data);
     } catch (error) {
-      console.error('Failed to fetch users', error);
+      console.error('Failed to fetch categories', error);
     } finally {
       setLoading(false);
     }
@@ -67,14 +65,14 @@ export default function UserListPage() {
     setFilters({ ...filters, page: newPage });
   };
 
-  const handleStatusToggle = async (user: User) => {
+  const handleStatusToggle = async (category: Category) => {
     try {
-      await userApi.updateStatus(user.id, !user.is_active);
+      await categoryApi.updateStatus(category.id, !category.is_active);
       // Optimistic update
       if (data) {
         setData({
           ...data,
-          items: data.items.map((u) => (u.id === user.id ? { ...u, is_active: !u.is_active } : u)),
+          items: data.items.map((c) => (c.id === category.id ? { ...c, is_active: !c.is_active } : c)),
         });
       }
       toast.success('Status updated successfully');
@@ -85,29 +83,25 @@ export default function UserListPage() {
     }
   };
 
-
-
   const handleDelete = async (id: number) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
+    if (window.confirm('Are you sure you want to delete this category?')) {
       try {
-        await userApi.deleteUser(id);
-        toast.success('User deleted successfully');
-        fetchUsers();
+        await categoryApi.deleteCategory(id);
+        toast.success('Category deleted successfully');
+        fetchCategories();
       } catch (error: any) {
-        const msg = error.response?.data?.message || 'Failed to delete user';
+        const msg = error.response?.data?.message || 'Failed to delete category';
         toast.error(msg);
-        console.error('Failed to delete user', error);
+        console.error('Failed to delete category', error);
       }
     }
   };
 
-
-
-  const renderStatusSwitch = (user: User) => {
+  const renderStatusSwitch = (category: Category) => {
     return (
       <SwitchButton 
-        checked={user.is_active}
-        onChange={() => handleStatusToggle(user)}
+        checked={category.is_active}
+        onChange={() => handleStatusToggle(category)}
       />
     );
   };
@@ -116,12 +110,12 @@ export default function UserListPage() {
     <div className="p-6 h-full flex flex-col bg-slate-50/50">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Users Management</h1>
-          <p className="text-sm text-slate-500 mt-1">Total: {data?.total || 0} users</p>
+          <h1 className="text-2xl font-bold text-slate-900">Categories Management</h1>
+          <p className="text-sm text-slate-500 mt-1">Total: {data?.total || 0} categories</p>
         </div>
-        <CustomButton onClick={() => navigate('/users/create')}>
+        <CustomButton onClick={() => navigate('/categories/create')}>
           <PlusIcon size={18} />
-          Add User
+          Add Category
         </CustomButton>
       </div>
 
@@ -137,16 +131,10 @@ export default function UserListPage() {
                 type="text"
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
-                placeholder="Search by name / email..."
+                placeholder="Search by name / code..."
                 className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
-
-            <Select
-              value={filters.role}
-              onChange={(e) => setFilters({ ...filters, role: e.target.value, page: 1 })}
-              options={ROLE_FILTER_OPTIONS}
-            />
 
             <Select
               value={filters.status}
@@ -163,8 +151,7 @@ export default function UserListPage() {
               <tr className="bg-slate-50/50 border-b border-slate-100 text-xs uppercase tracking-wider text-slate-500">
                 <th className="px-6 py-4 font-medium">ID</th>
                 <th className="px-6 py-4 font-medium">Name</th>
-                <th className="px-6 py-4 font-medium">Email</th>
-                <th className="px-6 py-4 font-medium">Role</th>
+                <th className="px-6 py-4 font-medium">Code</th>
                 <th className="px-6 py-4 font-medium">Status</th>
                 <th className="px-6 py-4 font-medium">Created</th>
                 <th className="px-6 py-4 font-medium">Actions</th>
@@ -173,46 +160,43 @@ export default function UserListPage() {
             <tbody className="divide-y divide-slate-100">
               {loading ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-8 text-center text-slate-500">
-                    Loading users...
+                  <td colSpan={6} className="px-6 py-8 text-center text-slate-500">
+                    Loading categories...
                   </td>
                 </tr>
               ) : data?.items?.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-8 text-center text-slate-500">
-                    No users found.
+                  <td colSpan={6} className="px-6 py-8 text-center text-slate-500">
+                    No categories found.
                   </td>
                 </tr>
               ) : (
-                data?.items?.map((user) => (
-                  <tr key={user.id} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="px-6 py-4 text-sm text-slate-500">#{user.id.toString().padStart(3, '0')}</td>
-                    <td className="px-6 py-4 text-sm font-medium text-slate-900">{user.full_name || user.username}</td>
-                    <td className="px-6 py-4 text-sm text-slate-500">{user.email}</td>
-                    <td className="px-6 py-4 text-sm text-slate-500">
-                      {user.roles && user.roles.join(', ')}
-                    </td>
+                data?.items?.map((category) => (
+                  <tr key={category.id} className="hover:bg-slate-50/50 transition-colors">
+                    <td className="px-6 py-4 text-sm text-slate-500">#{category.id.toString().padStart(3, '0')}</td>
+                    <td className="px-6 py-4 text-sm font-medium text-slate-900">{category.name}</td>
+                    <td className="px-6 py-4 text-sm text-slate-500">{category.code}</td>
                     <td className="px-6 py-4 text-sm">
                       <div className="flex items-center gap-2">
-                        {renderStatusSwitch(user)}
+                        {renderStatusSwitch(category)}
                       </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-slate-500">
-                      {new Date(user.created_at).toISOString().split('T')[0]}
+                      {new Date(category.created_at).toISOString().split('T')[0]}
                     </td>
                     <td className="px-6 py-4 text-sm text-slate-500">
                       <div className="flex items-center gap-3">
                         <CustomButton
                           variant="ghost"
                           className="!px-2 !py-1"
-                          onClick={() => navigate(`/users/update/${user.id}`)}
+                          onClick={() => navigate(`/categories/update/${category.id}`)}
                         >
                           <EditIcon size={16} /> Edit
                         </CustomButton>
                         <CustomButton
                           variant="danger"
                           className="!px-2 !py-1"
-                          onClick={() => handleDelete(user.id)}
+                          onClick={() => handleDelete(category.id)}
                         >
                           <TrashIcon size={16} /> Delete
                         </CustomButton>
@@ -239,7 +223,6 @@ export default function UserListPage() {
               >
                 &lt;
               </button>
-              {/* Simple pagination logic for demo */}
               {Array.from({ length: Math.min(5, data.total_pages) }).map((_, idx) => {
                 const pageNum = idx + 1;
                 return (
