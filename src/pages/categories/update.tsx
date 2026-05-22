@@ -1,15 +1,18 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router';
-import CategoryForm from './components/CategoryForm';
-import { categoryApi } from '../../api/category';
-import type { Category } from '../../types/category';
-import toast from 'react-hot-toast';
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router";
+import CategoryForm from "./components/CategoryForm";
+import { categoryApi } from "../../api/category";
+import type { Category } from "../../types/category";
+import toast from "react-hot-toast";
+import { usePaginationHistory } from "../../hooks/usePaginationHistory";
 
 export default function UpdateCategoryPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [category, setCategory] = useState<Category | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { getReturnHref } = usePaginationHistory({ scope: "categories" });
 
   useEffect(() => {
     if (id) {
@@ -22,8 +25,14 @@ export default function UpdateCategoryPage() {
       const res = await categoryApi.getCategory(categoryId);
       setCategory(res.data);
     } catch (err: any) {
-      toast.error('Failed to load category details');
+      toast.error("Failed to load category details");
     }
+  };
+
+  const returnUrl = getReturnHref("/categories");
+
+  const handleCancel = () => {
+    navigate(getReturnHref("/categories"));
   };
 
   const handleSubmit = async (data: Partial<Category>) => {
@@ -31,10 +40,10 @@ export default function UpdateCategoryPage() {
     setIsLoading(true);
     try {
       await categoryApi.updateCategory(parseInt(id), data);
-      toast.success('Category updated successfully');
-      navigate('/categories');
+      toast.success("Category updated successfully");
+      navigate(returnUrl);
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Failed to update category');
+      toast.error(err.response?.data?.message || "Failed to update category");
     } finally {
       setIsLoading(false);
     }
@@ -49,11 +58,12 @@ export default function UpdateCategoryPage() {
         <p className="text-slate-500">Modify category information.</p>
       </div>
 
-      <CategoryForm 
-        initialData={category} 
-        onSubmit={handleSubmit} 
-        isLoading={isLoading} 
-        isEdit={true} 
+      <CategoryForm
+        initialData={category}
+        onSubmit={handleSubmit}
+        isLoading={isLoading}
+        isEdit={true}
+        onCancel={handleCancel}
       />
     </div>
   );

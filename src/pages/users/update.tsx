@@ -1,15 +1,18 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router';
-import UserForm from './components/UserForm';
-import { userApi } from '../../api/user';
-import type { User } from '../../types/user';
-import toast from 'react-hot-toast';
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router";
+import UserForm from "./components/UserForm";
+import { userApi } from "../../api/user";
+import type { User } from "../../types/user";
+import toast from "react-hot-toast";
+import { usePaginationHistory } from "../../hooks/usePaginationHistory";
 
 export default function UpdateUserPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { getReturnHref } = usePaginationHistory({ scope: "users" });
 
   useEffect(() => {
     if (id) {
@@ -22,8 +25,14 @@ export default function UpdateUserPage() {
       const res = await userApi.getUser(userId);
       setUser(res.data);
     } catch (err: any) {
-      toast.error('Failed to load user details');
+      toast.error("Failed to load user details");
     }
+  };
+
+  const returnUrl = getReturnHref("/users");
+
+  const handleCancel = () => {
+    navigate(getReturnHref("/users"));
   };
 
   const handleSubmit = async (data: Partial<User>) => {
@@ -31,10 +40,10 @@ export default function UpdateUserPage() {
     setIsLoading(true);
     try {
       await userApi.updateUser(parseInt(id), data);
-      toast.success('User updated successfully');
-      navigate('/users');
+      toast.success("User updated successfully");
+      navigate(returnUrl);
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Failed to update user');
+      toast.error(err.response?.data?.message || "Failed to update user");
     } finally {
       setIsLoading(false);
     }
@@ -49,11 +58,12 @@ export default function UpdateUserPage() {
         <p className="text-slate-500">Modify user information.</p>
       </div>
 
-      <UserForm 
-        initialData={user} 
-        onSubmit={handleSubmit} 
-        isLoading={isLoading} 
-        isEdit={true} 
+      <UserForm
+        initialData={user}
+        onSubmit={handleSubmit}
+        isLoading={isLoading}
+        isEdit={true}
+        onCancel={handleCancel}
       />
     </div>
   );

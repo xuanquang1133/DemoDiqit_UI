@@ -4,15 +4,17 @@ import type { Category } from '../../../types/category';
 import { Input } from '../../../components/common/Input';
 import { SwitchButton } from '../../../components/common/SwitchButton';
 import { CustomButton } from '../../../components/common/CustomButton';
+import { CancelButton } from '../../../components/common/CancelButton';
 
 interface CategoryFormProps {
   initialData?: Partial<Category>;
   onSubmit: (data: Partial<Category>) => Promise<void>;
   isLoading: boolean;
   isEdit?: boolean;
+  onCancel?: () => void;
 }
 
-export default function CategoryForm({ initialData, onSubmit, isLoading, isEdit = false }: CategoryFormProps) {
+export default function CategoryForm({ initialData, onSubmit, isLoading, isEdit = false, onCancel }: CategoryFormProps) {
   const [formData, setFormData] = useState<Partial<Category>>({
     name: '',
     code: '',
@@ -72,9 +74,7 @@ export default function CategoryForm({ initialData, onSubmit, isLoading, isEdit 
       </div>
 
       <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
-        <CustomButton variant="secondary" onClick={() => window.history.back()}>
-          Cancel
-        </CustomButton>
+        <CancelButton onCancel={onCancel ?? (() => window.history.back())} />
         <CustomButton type="submit" disabled={isLoading}>
           {isLoading ? 'Saving...' : (isEdit ? 'Update Category' : 'Create Category')}
         </CustomButton>

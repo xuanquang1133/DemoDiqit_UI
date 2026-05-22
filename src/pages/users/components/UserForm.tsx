@@ -4,6 +4,7 @@ import type { User } from '../../../types/user';
 import { Input } from '../../../components/common/Input';
 import { SwitchButton } from '../../../components/common/SwitchButton';
 import { CustomButton } from '../../../components/common/CustomButton';
+import { CancelButton } from '../../../components/common/CancelButton';
 import toast from 'react-hot-toast';
 
 interface UserFormProps {
@@ -11,11 +12,12 @@ interface UserFormProps {
   onSubmit: (data: Partial<User>) => Promise<void>;
   isLoading: boolean;
   isEdit?: boolean;
+  onCancel?: () => void;
 }
 
 import { ROLE_OPTIONS } from '../../../constants';
 
-export default function UserForm({ initialData, onSubmit, isLoading, isEdit = false }: UserFormProps) {
+export default function UserForm({ initialData, onSubmit, isLoading, isEdit = false, onCancel }: UserFormProps) {
   const [formData, setFormData] = useState<Partial<User> & { password?: string }>({
     username: '',
     email: '',
@@ -144,9 +146,7 @@ export default function UserForm({ initialData, onSubmit, isLoading, isEdit = fa
       </div>
 
       <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
-        <CustomButton variant="secondary" onClick={() => window.history.back()}>
-          Cancel
-        </CustomButton>
+        <CancelButton onCancel={onCancel ?? (() => window.history.back())} />
         <CustomButton type="submit" disabled={isLoading || passwordMismatch}>
           {isLoading ? 'Saving...' : 'Save User'}
         </CustomButton>
