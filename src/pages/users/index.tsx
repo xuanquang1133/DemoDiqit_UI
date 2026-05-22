@@ -17,7 +17,7 @@ import toast from "react-hot-toast";
 export default function UserListPage() {
   const navigate = useNavigate();
 
-  const { page, setPage, getReturnHref } = usePaginationHistory({ scope: "users" });
+  const { page, setPage } = usePaginationHistory({ scope: "users" });
   const limit = 10;
 
   const [data, setData] = useState<PaginatedData<User> | null>(null);
@@ -205,7 +205,7 @@ export default function UserListPage() {
         actions={(user) => (
           <TableActions
             onEdit={() =>
-              navigate(`/users/update/${user.id}?returnUrl=${encodeURIComponent(getReturnHref("/users"))}`)
+              navigate(`/users/update/${user.id}`)
             }
             onDelete={() => handleDelete(user.id)}
           />

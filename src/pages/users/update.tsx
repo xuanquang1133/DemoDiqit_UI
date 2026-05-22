@@ -1,16 +1,18 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import UserForm from "./components/UserForm";
 import { userApi } from "../../api/user";
 import type { User } from "../../types/user";
 import toast from "react-hot-toast";
+import { usePaginationHistory } from "../../hooks/usePaginationHistory";
 
 export default function UpdateUserPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const [searchParams] = useSearchParams();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { getReturnHref } = usePaginationHistory({ scope: "users" });
 
   useEffect(() => {
     if (id) {
@@ -27,7 +29,11 @@ export default function UpdateUserPage() {
     }
   };
 
-  const returnUrl = searchParams.get("returnUrl") || "/users";
+  const returnUrl = getReturnHref("/users");
+
+  const handleCancel = () => {
+    navigate(getReturnHref("/users"));
+  };
 
   const handleSubmit = async (data: Partial<User>) => {
     if (!id) return;
@@ -57,6 +63,7 @@ export default function UpdateUserPage() {
         onSubmit={handleSubmit}
         isLoading={isLoading}
         isEdit={true}
+        onCancel={handleCancel}
       />
     </div>
   );
