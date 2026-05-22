@@ -1,16 +1,18 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import CategoryForm from "./components/CategoryForm";
 import { categoryApi } from "../../api/category";
 import type { Category } from "../../types/category";
 import toast from "react-hot-toast";
+import { usePaginationHistory } from "../../hooks/usePaginationHistory";
 
 export default function UpdateCategoryPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const [searchParams] = useSearchParams();
   const [category, setCategory] = useState<Category | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { getReturnHref } = usePaginationHistory({ scope: "categories" });
 
   useEffect(() => {
     if (id) {
@@ -27,7 +29,11 @@ export default function UpdateCategoryPage() {
     }
   };
 
-  const returnUrl = searchParams.get("returnUrl") || "/categories";
+  const returnUrl = getReturnHref("/categories");
+
+  const handleCancel = () => {
+    navigate(getReturnHref("/categories"));
+  };
 
   const handleSubmit = async (data: Partial<Category>) => {
     if (!id) return;
@@ -57,6 +63,7 @@ export default function UpdateCategoryPage() {
         onSubmit={handleSubmit}
         isLoading={isLoading}
         isEdit={true}
+        onCancel={handleCancel}
       />
     </div>
   );

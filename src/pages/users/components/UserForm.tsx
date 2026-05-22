@@ -4,6 +4,7 @@ import type { User } from '../../../types/user';
 import { Input } from '../../../components/common/Input';
 import { SwitchButton } from '../../../components/common/SwitchButton';
 import { CustomButton } from '../../../components/common/CustomButton';
+import { CancelButton } from '../../../components/common/CancelButton';
 import toast from 'react-hot-toast';
 
 interface UserFormProps {
@@ -144,9 +145,7 @@ export default function UserForm({ initialData, onSubmit, isLoading, isEdit = fa
       </div>
 
       <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
-        <CustomButton variant="secondary" onClick={() => window.history.back()}>
-          Cancel
-        </CustomButton>
+        <CancelButton onCancel={() => window.history.back()} />
         <CustomButton type="submit" disabled={isLoading || passwordMismatch}>
           {isLoading ? 'Saving...' : 'Save User'}
         </CustomButton>

@@ -17,7 +17,7 @@ import toast from "react-hot-toast";
 export default function CategoryListPage() {
   const navigate = useNavigate();
 
-  const { page, setPage, getReturnHref } = usePaginationHistory({ scope: "categories" });
+  const { page, setPage } = usePaginationHistory({ scope: "categories" });
   const limit = 10;
 
   const [data, setData] = useState<PaginatedData<Category> | null>(null);
@@ -189,7 +189,7 @@ export default function CategoryListPage() {
         actions={(category) => (
           <TableActions
             onEdit={() =>
-              navigate(`/categories/update/${category.id}?returnUrl=${encodeURIComponent(getReturnHref("/categories"))}`)
+              navigate(`/categories/update/${category.id}`)
             }
             onDelete={() => handleDelete(category.id)}
           />

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { CustomButton } from "../../../components/common/CustomButton";
+import { CancelButton } from "../../../components/common/CancelButton";
 import { SpinnerIcon } from "../../../components/icons";
 import { generateSlug, generateSKU } from "../../../utils/slugify";
 import type { Product, CreateProductRequest, UpdateProductRequest } from "../../../types/product";
@@ -396,14 +397,7 @@ export default function ProductForm({
 
         {/* Actions */}
         <div className="flex items-center justify-end gap-3 pb-4">
-          <CustomButton
-            type="button"
-            onClick={onCancel}
-            className="bg-slate-100 text-slate-700 hover:bg-slate-200"
-            disabled={isSubmitting}
-          >
-            Cancel
-          </CustomButton>
+          <CancelButton onCancel={onCancel} disabled={isSubmitting} />
           <CustomButton
             type="submit"
             className="min-w-[140px]"

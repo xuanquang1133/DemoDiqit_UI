@@ -36,9 +36,6 @@ export function ProductTable({
               Category
             </th>
             <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
-              Slug
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
               SKU
             </th>
             <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
@@ -56,7 +53,7 @@ export function ProductTable({
           {products.length === 0 ? (
             <tr>
               <td
-                colSpan={7}
+                colSpan={6}
                 className="px-4 py-8 text-center text-sm text-slate-500"
               >
                 No products found
@@ -101,9 +98,6 @@ export function ProductTable({
                   ) : (
                     <span className="text-xs text-slate-400">—</span>
                   )}
-                </td>
-                <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500">
-                  {product.slug || "-"}
                 </td>
                 <td className="whitespace-nowrap px-4 py-3 text-sm text-slate-600">
                   {product.sku || "-"}

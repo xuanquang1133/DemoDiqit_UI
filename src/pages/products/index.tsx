@@ -18,7 +18,7 @@ export default function ProductListPage() {
   const navigate = useNavigate();
   const [, setSearchParams] = useSearchParams();
 
-  const { page, setPage, getReturnHref } = usePaginationHistory({ scope: "products" });
+  const { page, setPage } = usePaginationHistory({ scope: "products" });
   const limit = 10;
 
   const [products, setProducts] = useState<Product[]>([]);
@@ -118,7 +118,7 @@ export default function ProductListPage() {
   };
 
   const handleEdit = (product: Product) => {
-    navigate(`/products/${product.id}/edit?returnUrl=${encodeURIComponent(getReturnHref("/products"))}`);
+    navigate(`/products/${product.id}/edit`);
   };
 
   const handleViewDetail = (product: Product) => {

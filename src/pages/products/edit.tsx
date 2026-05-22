@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, useSearchParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import ProductForm from "./components/ProductForm";
 import type { Product } from "../../types/product";
 import { getProduct } from "../../api/product";
 import { SpinnerIcon } from "../../components/icons";
+import { usePaginationHistory } from "../../hooks/usePaginationHistory";
 
 export default function EditPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+
+  const { getReturnHref } = usePaginationHistory({ scope: "products" });
 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -38,7 +40,7 @@ export default function EditPage() {
     fetchProduct();
   }, [id]);
 
-  const returnUrl = searchParams.get("returnUrl") || "/products";
+  const returnUrl = getReturnHref("/products");
 
   const handleSuccess = () => {
     navigate(returnUrl);
