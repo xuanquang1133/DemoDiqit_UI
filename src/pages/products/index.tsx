@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { ProductTable } from "./components/ProductTable";
 import { DeleteModal } from "./components/DeleteModal";
@@ -14,7 +14,13 @@ import { SpinnerIcon } from "../../components/icons";
 import { usePaginationHistory } from "../../hooks/usePaginationHistory";
 import toast from "react-hot-toast";
 
-function useProductList(page: number, limit: number) {
+export default function ProductListPage() {
+  const navigate = useNavigate();
+  const [, setSearchParams] = useSearchParams();
+
+  const { page, setPage, getReturnHref } = usePaginationHistory({ scope: "products" });
+  const limit = 10;
+
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>("");
@@ -30,6 +36,16 @@ function useProductList(page: number, limit: number) {
   const [searchInput, setSearchInput] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
+  const [deleteModal, setDeleteModal] = useState<{
+    show: boolean;
+    product: Product | null;
+  }>({
+    show: false,
+    product: null,
+  });
+
+  const totalPages = Math.ceil(total / limit);
+
   const fetchCategories = useCallback(async () => {
     try {
       const res = await categoryApi.getListCommon({});
@@ -39,15 +55,19 @@ function useProductList(page: number, limit: number) {
     }
   }, []);
 
+  const buildParams = useCallback((): ProductQueryParams => {
+    const params: ProductQueryParams = { page, limit };
+    if (filters.keyword) params.keyword = filters.keyword;
+    if (filters.category !== "All") params.is_category = filters.category;
+    if (filters.status !== "All") params.is_active = filters.status === "active";
+    return params;
+  }, [page, limit, filters.keyword, filters.category, filters.status]);
+
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
-      const params: ProductQueryParams = { page, limit };
-      if (filters.keyword) params.keyword = filters.keyword;
-      if (filters.category !== "All") params.is_category = filters.category;
-      if (filters.status !== "All") params.is_active = filters.status === "active";
-      const response = await getProducts(params);
+      const response = await getProducts(buildParams());
       setProducts(response.items);
       setTotal(response.total);
     } catch (err: any) {
@@ -55,7 +75,7 @@ function useProductList(page: number, limit: number) {
     } finally {
       setLoading(false);
     }
-  }, [page, limit, filters.keyword, filters.category, filters.status]);
+  }, [buildParams]);
 
   useEffect(() => {
     fetchCategories();
@@ -75,94 +95,6 @@ function useProductList(page: number, limit: number) {
     return () => clearTimeout(timer);
   }, [searchInput]);
 
-  const handleDelete = useCallback(
-    async (product: Product) => {
-      setIsDeleting(true);
-      try {
-        await deleteProduct(product.id);
-        const params: ProductQueryParams = { page, limit };
-        if (filters.keyword) params.keyword = filters.keyword;
-        if (filters.category !== "All") params.is_category = filters.category;
-        if (filters.status !== "All") params.is_active = filters.status === "active";
-        const response = await getProducts(params);
-        setProducts(response.items);
-        setTotal(response.total);
-      } catch (err: any) {
-        throw new Error(err.response?.data?.message || "Failed to delete product");
-      } finally {
-        setIsDeleting(false);
-      }
-    },
-    [page, limit, filters.keyword, filters.category, filters.status]
-  );
-
-  const handleToggleStatus = useCallback(
-    async (product: Product) => {
-      try {
-        await updateProductStatus(product.id, !product.is_active);
-        const params: ProductQueryParams = { page, limit };
-        if (filters.keyword) params.keyword = filters.keyword;
-        if (filters.category !== "All") params.is_category = filters.category;
-        if (filters.status !== "All") params.is_active = filters.status === "active";
-        const response = await getProducts(params);
-        setProducts(response.items);
-        setTotal(response.total);
-      } catch (err: any) {
-        throw new Error(err.response?.data?.message || "Failed to update status");
-      }
-    },
-    [page, limit, filters.keyword, filters.category, filters.status]
-  );
-
-  return {
-    products,
-    loading,
-    error,
-    total,
-    filters,
-    fetchProducts,
-    handleDelete,
-    handleToggleStatus,
-    setFilters,
-    setSearchInput,
-    searchInput,
-    isDeleting,
-    categories,
-  };
-}
-
-export default function ProductListPage() {
-  const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const { page, setPage } = usePaginationHistory({ scope: "products" });
-  const limit = 10;
-
-  const {
-    products,
-    loading,
-    error,
-    total,
-    searchInput,
-    setSearchInput,
-    filters,
-    handleDelete: deleteProduct,
-    handleToggleStatus,
-    setFilters,
-    isDeleting,
-    categories,
-  } = useProductList(page, limit);
-
-  const totalPages = Math.ceil(total / limit);
-
-  const [deleteModal, setDeleteModal] = useState<{
-    show: boolean;
-    product: Product | null;
-  }>({
-    show: false,
-    product: null,
-  });
-
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
     setSearchParams((prev) => {
@@ -176,9 +108,7 @@ export default function ProductListPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleFilterChange = (
-    setter: (prev: typeof filters) => typeof filters
-  ) => {
+  const handleFilterChange = (setter: (prev: typeof filters) => typeof filters) => {
     setFilters(setter);
     setPage(1);
     setSearchParams((prev) => {
@@ -188,7 +118,7 @@ export default function ProductListPage() {
   };
 
   const handleEdit = (product: Product) => {
-    navigate(`/products/${product.id}/edit${page > 1 ? `?fromPage=${page}` : ""}`);
+    navigate(`/products/${product.id}/edit?returnUrl=${encodeURIComponent(getReturnHref("/products"))}`);
   };
 
   const handleViewDetail = (product: Product) => {
@@ -201,18 +131,29 @@ export default function ProductListPage() {
 
   const handleDeleteConfirm = async () => {
     if (!deleteModal.product) return;
+    setIsDeleting(true);
     try {
-      await deleteProduct(deleteModal.product);
+      await deleteProduct(deleteModal.product!.id);
+      const response = await getProducts(buildParams());
+      setProducts(response.items);
+      setTotal(response.total);
       setDeleteModal({ show: false, product: null });
     } catch (err: any) {
-      toast.error(err.message || "Failed to delete product");
+      toast.error(err.response?.data?.message || "Failed to delete product");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
-  const handleToggleStatusClick = (product: Product) => {
-    handleToggleStatus(product).catch((err: Error) => {
-      toast.error(err.message);
-    });
+  const handleToggleStatusClick = async (product: Product) => {
+    try {
+      await updateProductStatus(product.id, !product.is_active);
+      const response = await getProducts(buildParams());
+      setProducts(response.items);
+      setTotal(response.total);
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to update status");
+    }
   };
 
   const categoryOptions = [

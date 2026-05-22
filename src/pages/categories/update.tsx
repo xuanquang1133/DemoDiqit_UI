@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router';
-import CategoryForm from './components/CategoryForm';
-import { categoryApi } from '../../api/category';
-import type { Category } from '../../types/category';
-import toast from 'react-hot-toast';
+import { useState, useEffect } from "react";
+import { useNavigate, useParams, useSearchParams } from "react-router";
+import CategoryForm from "./components/CategoryForm";
+import { categoryApi } from "../../api/category";
+import type { Category } from "../../types/category";
+import toast from "react-hot-toast";
 
 export default function UpdateCategoryPage() {
   const navigate = useNavigate();
@@ -23,21 +23,21 @@ export default function UpdateCategoryPage() {
       const res = await categoryApi.getCategory(categoryId);
       setCategory(res.data);
     } catch (err: any) {
-      toast.error('Failed to load category details');
+      toast.error("Failed to load category details");
     }
   };
 
-  const fromPage = searchParams.get("fromPage");
+  const returnUrl = searchParams.get("returnUrl") || "/categories";
 
   const handleSubmit = async (data: Partial<Category>) => {
     if (!id) return;
     setIsLoading(true);
     try {
       await categoryApi.updateCategory(parseInt(id), data);
-      toast.success('Category updated successfully');
-      navigate(fromPage ? `/categories?page=${fromPage}` : '/categories');
+      toast.success("Category updated successfully");
+      navigate(returnUrl);
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Failed to update category');
+      toast.error(err.response?.data?.message || "Failed to update category");
     } finally {
       setIsLoading(false);
     }
@@ -52,11 +52,11 @@ export default function UpdateCategoryPage() {
         <p className="text-slate-500">Modify category information.</p>
       </div>
 
-      <CategoryForm 
-        initialData={category} 
-        onSubmit={handleSubmit} 
-        isLoading={isLoading} 
-        isEdit={true} 
+      <CategoryForm
+        initialData={category}
+        onSubmit={handleSubmit}
+        isLoading={isLoading}
+        isEdit={true}
       />
     </div>
   );

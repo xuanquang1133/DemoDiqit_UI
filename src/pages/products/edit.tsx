@@ -38,14 +38,14 @@ export default function EditPage() {
     fetchProduct();
   }, [id]);
 
-  const fromPage = searchParams.get("fromPage");
+  const returnUrl = searchParams.get("returnUrl") || "/products";
 
   const handleSuccess = () => {
-    navigate(fromPage ? `/products?page=${fromPage}` : "/products");
+    navigate(returnUrl);
   };
 
   const handleCancel = () => {
-    navigate(fromPage ? `/products?page=${fromPage}` : "/products");
+    navigate(returnUrl);
   };
 
   if (loading) {

@@ -1,4 +1,3 @@
-import type { ChangeEvent } from "react";
 import type { Product } from "../../../types/product";
 import { ImageIcon } from "../../../components/icons";
 import { TableActions } from "../../../components/common/TableActions";

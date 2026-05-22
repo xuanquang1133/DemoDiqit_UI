@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useSearchParams, useNavigate } from "react-router";
+import { useSearchParams } from "react-router";
 
 const STORAGE_KEY_PREFIX = "intershop_pagination_";
 
@@ -13,7 +13,6 @@ export function usePaginationHistory(options: UsePaginationHistoryOptions) {
   const { scope, defaultPage = 1, defaultLimit = 10 } = options;
 
   const storageKey = `${STORAGE_KEY_PREFIX}${scope}`;
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const queryPage = searchParams.get("page");
@@ -46,15 +45,19 @@ export function usePaginationHistory(options: UsePaginationHistoryOptions) {
     }
   }, [storageKey]);
 
-  const getReturnHref = useCallback((): string => {
-    try {
-      const stored = sessionStorage.getItem(storageKey);
-      const storedPage = stored ? parseInt(stored, 10) : defaultPage;
-      return storedPage > 1 ? `?page=${storedPage}` : "";
-    } catch {
-      return "";
-    }
-  }, [storageKey, defaultPage]);
+  const getReturnHref = useCallback(
+    (basePath: string): string => {
+      try {
+        const stored = sessionStorage.getItem(storageKey);
+        const storedPage = stored ? parseInt(stored, 10) : defaultPage;
+        if (storedPage <= 1) return basePath;
+        return `${basePath}?page=${storedPage}`;
+      } catch {
+        return basePath;
+      }
+    },
+    [storageKey, defaultPage]
+  );
 
   return {
     page,
