@@ -19,6 +19,10 @@ import CategoryListPage from "../pages/categories/index";
 import CreateCategoryPage from "../pages/categories/create";
 import UpdateCategoryPage from "../pages/categories/update";
 
+import OrderListPage from "../pages/orders";
+import OrderDetailPage from "../pages/orders/detail";
+import CreateOrderPage from "../pages/orders/create";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -87,6 +91,18 @@ export const router = createBrowserRouter([
           {
             path: "/categories/update/:id",
             element: <UpdateCategoryPage />,
+          },
+          {
+            path: "/orders",
+            element: <OrderListPage />,
+          },
+          {
+            path: "/orders/create",
+            element: <CreateOrderPage />,
+          },
+          {
+            path: "/orders/:id",
+            element: <OrderDetailPage />,
           },
         ],
       },

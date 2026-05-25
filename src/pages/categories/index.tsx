@@ -1,11 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router";
 import { categoryApi } from "../../api/category";
 import type { Category } from "../../types/category";
 import type { PaginatedData } from "../../types/common";
-import { PlusIcon } from "../../components/icons/PlusIcon";
 import { SwitchButton } from "../../components/common/SwitchButton";
-import { CustomButton } from "../../components/common/CustomButton";
+import { AddButton } from "../../components/common/AddButton";
 import { Pagination } from "../../components/common/Pagination";
 import { FilterBar } from "../../components/common/FilterBar";
 import { DataTable, type DataTableColumn } from "../../components/common/DataTable";
@@ -15,8 +13,6 @@ import { usePaginationHistory } from "../../hooks/usePaginationHistory";
 import toast from "react-hot-toast";
 
 export default function CategoryListPage() {
-  const navigate = useNavigate();
-
   const { page, setPage } = usePaginationHistory({ scope: "categories" });
   const limit = 10;
 
@@ -153,10 +149,7 @@ export default function CategoryListPage() {
             Total: {data?.total || 0} categories
           </p>
         </div>
-        <CustomButton onClick={() => navigate("/categories/create")}>
-          <PlusIcon size={18} />
-          Add Category
-        </CustomButton>
+        <AddButton label="Add Category" navigateTo="/categories/create" />
       </div>
 
       {/* Filter Bar */}
@@ -188,9 +181,9 @@ export default function CategoryListPage() {
         emptyMessage="No categories found."
         actions={(category) => (
           <TableActions
-            onEdit={() =>
-              navigate(`/categories/update/${category.id}`)
-            }
+            onEdit={() => {
+              window.location.href = `/categories/update/${category.id}`;
+            }}
             onDelete={() => handleDelete(category.id)}
           />
         )}

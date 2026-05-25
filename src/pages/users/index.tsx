@@ -1,11 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router";
 import { userApi } from "../../api/user";
 import type { User } from "../../types/user";
 import type { PaginatedData } from "../../types/common";
-import { PlusIcon } from "../../components/icons/PlusIcon";
 import { SwitchButton } from "../../components/common/SwitchButton";
-import { CustomButton } from "../../components/common/CustomButton";
+import { AddButton } from "../../components/common/AddButton";
 import { Pagination } from "../../components/common/Pagination";
 import { FilterBar } from "../../components/common/FilterBar";
 import { DataTable, type DataTableColumn } from "../../components/common/DataTable";
@@ -15,8 +13,6 @@ import { usePaginationHistory } from "../../hooks/usePaginationHistory";
 import toast from "react-hot-toast";
 
 export default function UserListPage() {
-  const navigate = useNavigate();
-
   const { page, setPage } = usePaginationHistory({ scope: "users" });
   const limit = 10;
 
@@ -158,10 +154,7 @@ export default function UserListPage() {
           <h1 className="text-2xl font-bold text-slate-900">Users Management</h1>
           <p className="text-sm text-slate-500 mt-1">Total: {data?.total || 0} users</p>
         </div>
-        <CustomButton onClick={() => navigate("/users/create")}>
-          <PlusIcon size={18} />
-          Add User
-        </CustomButton>
+        <AddButton label="Add User" navigateTo="/users/create" />
       </div>
 
       {/* Filter Bar */}
@@ -204,9 +197,9 @@ export default function UserListPage() {
         emptyMessage="No users found."
         actions={(user) => (
           <TableActions
-            onEdit={() =>
-              navigate(`/users/update/${user.id}`)
-            }
+            onEdit={() => {
+              window.location.href = `/users/update/${user.id}`;
+            }}
             onDelete={() => handleDelete(user.id)}
           />
         )}

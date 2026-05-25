@@ -140,14 +140,6 @@ export default function DetailPage() {
                 {Number(product.price).toLocaleString()} VND
               </span>
             </div>
-            {product.sale_price && Number(product.sale_price) > 0 && (
-              <div className="flex justify-between border-b border-slate-100 pb-3">
-                <span className="text-sm text-slate-500">Sale Price</span>
-                <span className="text-sm font-medium text-red-600">
-                  {Number(product.sale_price).toLocaleString()} VND
-                </span>
-              </div>
-            )}
             <div className="flex justify-between border-b border-slate-100 pb-3">
               <span className="text-sm text-slate-500">Created At</span>
               <span className="text-sm font-medium text-slate-900">

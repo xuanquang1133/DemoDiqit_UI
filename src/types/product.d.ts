@@ -15,7 +15,6 @@ export interface Product {
   sku: string;
   description: string;
   price: number;
-  sale_price: number;
   thumbnail: string;
   is_active: boolean;
   created_at: string;
@@ -29,9 +28,9 @@ export interface CreateProductRequest {
   sku?: string;
   description?: string;
   price: string;
-  sale_price?: string;
   thumbnail?: string;
   category_id?: number | null;
+  is_active?: boolean;
 }
 
 export interface UpdateProductRequest {
@@ -40,9 +39,9 @@ export interface UpdateProductRequest {
   sku?: string;
   description?: string;
   price?: string;
-  sale_price?: string;
   thumbnail?: string;
   category_id?: number | null;
+  is_active?: boolean;
 }
 
 // Query parameters for product listing

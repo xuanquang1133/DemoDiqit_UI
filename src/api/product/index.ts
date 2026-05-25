@@ -25,9 +25,9 @@ export const createProduct = async (data: CreateProductRequest): Promise<Product
     sku: data.sku,
     description: data.description,
     price: Number(data.price) || 0,
-    sale_price: data.sale_price ? Number(data.sale_price) : null,
     thumbnail: data.thumbnail,
     category_id: data.category_id ?? null,
+    is_active: data.is_active,
   };
   return axiosClient.post<any, Product>("/products", payload);
 };
@@ -40,9 +40,9 @@ export const updateProduct = async (id: number, data: UpdateProductRequest): Pro
     sku: data.sku,
     description: data.description,
     price: data.price !== undefined ? Number(data.price) : undefined,
-    sale_price: data.sale_price ? Number(data.sale_price) : undefined,
     thumbnail: data.thumbnail,
     category_id: data.category_id,
+    is_active: data.is_active,
   };
   return axiosClient.put<any, Product>(`/products/${id}`, payload);
 };

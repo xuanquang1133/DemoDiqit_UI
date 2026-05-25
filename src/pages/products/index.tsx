@@ -5,6 +5,7 @@ import { DeleteModal } from "./components/DeleteModal";
 import { Pagination } from "../../components/common/Pagination";
 import { FilterBar } from "../../components/common/FilterBar";
 import { Select } from "../../components/common/Select";
+import { AddButton } from "../../components/common/AddButton";
 import { STATUS_FILTER_OPTIONS } from "../../constants";
 import type { Product, ProductQueryParams } from "../../types/product";
 import { getProducts, deleteProduct, updateProductStatus } from "../../api/product";
@@ -166,12 +167,7 @@ export default function ProductListPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-slate-900">Products</h1>
-        <button
-          onClick={() => navigate("/products/create")}
-          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
-        >
-          + Add Product
-        </button>
+        <AddButton label="Add Product" navigateTo="/products/create" />
       </div>
 
       {/* Filter Bar */}
