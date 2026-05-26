@@ -1,11 +1,23 @@
 import { useState, useEffect } from "react";
 import { CustomButton } from "../../../components/common/CustomButton";
 import { CancelButton } from "../../../components/common/CancelButton";
+import { SwitchButton } from "../../../components/common/SwitchButton";
 import { SpinnerIcon } from "../../../components/icons";
 import { generateSlug, generateSKU } from "../../../utils/slugify";
 import type { Product, CreateProductRequest, UpdateProductRequest } from "../../../types/product";
 import type { Category } from "../../../types/category";
 import { categoryApi } from "../../../api/category";
+
+interface ProductFormData {
+  name: string;
+  slug: string;
+  sku: string;
+  description: string;
+  price: string;
+  thumbnail: string;
+  category_id: number | null;
+  is_active: boolean;
+}
 
 interface ProductFormProps {
   mode: "create" | "edit";
@@ -20,15 +32,15 @@ export default function ProductForm({
   onSuccess,
   onCancel,
 }: ProductFormProps) {
-  const [formData, setFormData] = useState<CreateProductRequest>({
+  const [formData, setFormData] = useState<ProductFormData>({
     name: "",
     slug: "",
     sku: "",
     description: "",
     price: "",
-    sale_price: "",
     thumbnail: "",
     category_id: null,
+    is_active: true,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -58,9 +70,9 @@ export default function ProductForm({
         sku: initialData.sku,
         description: initialData.description,
         price: String(initialData.price),
-        sale_price: initialData.sale_price ? String(initialData.sale_price) : "",
         thumbnail: initialData.thumbnail,
         category_id: initialData.category_id ?? null,
+        is_active: initialData.is_active,
       });
       setSkuEdited(false);
       setSlugEdited(false);
@@ -117,6 +129,9 @@ export default function ProductForm({
       if (errors.category_id) {
         setErrors((prev) => ({ ...prev, category_id: "" }));
       }
+    } else if (name === "is_active") {
+      const checked = (e.target as HTMLInputElement).checked;
+      setFormData((prev) => ({ ...prev, is_active: checked }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: stringValue }));
       if (errors[name]) {
@@ -141,13 +156,21 @@ export default function ProductForm({
     } else if (isNaN(Number(formData.price)) || Number(formData.price) <= 0) {
       newErrors.price = "Price must be a positive number";
     }
-    if (formData.sale_price && (isNaN(Number(formData.sale_price)) || Number(formData.sale_price) < 0)) {
-      newErrors.sale_price = "Sale price must be a positive number";
-    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
+  const buildPayload = (): UpdateProductRequest => ({
+    name: formData.name,
+    slug: formData.slug,
+    sku: formData.sku,
+    description: formData.description,
+    price: formData.price,
+    thumbnail: formData.thumbnail,
+    category_id: formData.category_id,
+    is_active: formData.is_active,
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -162,12 +185,21 @@ export default function ProductForm({
     try {
       if (mode === "create") {
         const { createProduct } = await import("../../../api/product");
-        await createProduct(formData);
+        const payload: CreateProductRequest = {
+          name: formData.name,
+          slug: formData.slug,
+          sku: formData.sku,
+          description: formData.description,
+          price: formData.price,
+          thumbnail: formData.thumbnail,
+          category_id: formData.category_id,
+          is_active: formData.is_active,
+        };
+        await createProduct(payload);
       } else {
         const { updateProduct } = await import("../../../api/product");
         if (initialData) {
-          const data: UpdateProductRequest = { ...formData };
-          await updateProduct(initialData.id, data);
+          await updateProduct(initialData.id, buildPayload());
         }
       }
       onSuccess();
@@ -314,7 +346,7 @@ export default function ProductForm({
         <div className="rounded-lg bg-white p-6 shadow-sm border border-slate-200">
           <h3 className="mb-5 text-base font-semibold text-slate-800">Pricing &amp; Media</h3>
           <div className="space-y-5">
-            {/* Pricing */}
+            {/* Price + Status row */}
             <div className="grid grid-cols-2 gap-4">
               {/* Price */}
               <div>
@@ -340,28 +372,14 @@ export default function ProductForm({
                 {errors.price && <p className="mt-1 text-xs text-red-500">{errors.price}</p>}
               </div>
 
-              {/* Sale Price */}
-              <div>
-                <label htmlFor="sale_price" className="mb-1 block text-sm font-medium text-slate-700">
-                  Sale Price
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    id="sale_price"
-                    name="sale_price"
-                    value={formData.sale_price}
-                    onChange={handleChange}
-                    className={`w-full rounded-lg border px-4 py-2.5 pr-10 text-sm transition focus:outline-none focus:ring-2 ${
-                      errors.sale_price
-                        ? "border-red-300 focus:border-red-500 focus:ring-red-200"
-                        : "border-slate-200 focus:border-blue-500 focus:ring-blue-200"
-                    }`}
-                    placeholder="0.00"
-                  />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">VND</span>
-                </div>
-                {errors.sale_price && <p className="mt-1 text-xs text-red-500">{errors.sale_price}</p>}
+              {/* Status */}
+              <div className="flex items-end pb-1">
+                <SwitchButton
+                  name="is_active"
+                  checked={formData.is_active}
+                  onChange={handleChange}
+                  label="Active"
+                />
               </div>
             </div>
 

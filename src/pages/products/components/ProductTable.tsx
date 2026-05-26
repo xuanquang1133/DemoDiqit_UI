@@ -106,12 +106,6 @@ export function ProductTable({
                   <p className="font-medium text-slate-900">
                     {Number(product.price).toLocaleString()} VND
                   </p>
-                  {product.sale_price &&
-                    Number(product.sale_price) > 0 && (
-                      <p className="text-xs text-slate-400 line-through">
-                        {Number(product.sale_price).toLocaleString()} VND
-                      </p>
-                    )}
                 </td>
                 <td className="whitespace-nowrap px-4 py-3">
                   <SwitchButton
