@@ -21,7 +21,6 @@ import UpdateCategoryPage from "../pages/categories/update";
 
 import OrderListPage from "../pages/orders";
 import OrderDetailPage from "../pages/orders/detail";
-import CreateOrderPage from "../pages/orders/create";
 
 export const router = createBrowserRouter([
   {
@@ -95,10 +94,6 @@ export const router = createBrowserRouter([
           {
             path: "/orders",
             element: <OrderListPage />,
-          },
-          {
-            path: "/orders/create",
-            element: <CreateOrderPage />,
           },
           {
             path: "/orders/:id",

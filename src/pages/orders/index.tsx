@@ -4,7 +4,6 @@ import { OrderTable } from "./components/OrderTable";
 import { Pagination } from "../../components/common/Pagination";
 import { FilterBar } from "../../components/common/FilterBar";
 import { Select } from "../../components/common/Select";
-import { AddButton } from "../../components/common/AddButton";
 import { usePaginationHistory } from "../../hooks/usePaginationHistory";
 import type { Order, OrderQueryParams } from "../../types/order";
 import { getOrders } from "../../api/order";
@@ -94,7 +93,6 @@ export default function OrderListPage() {
           <h1 className="text-2xl font-bold text-slate-900">Orders</h1>
           <p className="mt-1 text-sm text-slate-500">Manage orders from customers</p>
         </div>
-        <AddButton label="Add Order" navigateTo="/orders/create" />
       </div>
 
       {/* Filter Bar */}
