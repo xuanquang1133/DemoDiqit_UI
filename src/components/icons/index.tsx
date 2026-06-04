@@ -54,5 +54,6 @@ export { ShoppingBagIcon } from "./ShoppingBagIcon";
 export { ShoppingCartIcon } from "./ShoppingCartIcon";
 export { SpinnerIcon } from "./SpinnerIcon";
 export { TrashIcon } from "./TrashIcon";
+export { TrendingUpIcon } from "./TrendingUpIcon";
 export { UserGroupIcon } from "./UserGroupIcon";
 export { UserIcon } from "./UserIcon";
