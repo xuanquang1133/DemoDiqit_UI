@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 
 export default function UserListPage() {
   const { page, setPage } = usePaginationHistory({ scope: "users" });
-  const limit = 10;
+  const limit = Number(localStorage.getItem("default_limit") || 10);
 
   const [data, setData] = useState<PaginatedData<User> | null>(null);
   const [loading, setLoading] = useState(false);

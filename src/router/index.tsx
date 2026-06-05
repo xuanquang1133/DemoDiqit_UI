@@ -21,6 +21,7 @@ import UpdateCategoryPage from "../pages/categories/update";
 
 import OrderListPage from "../pages/orders";
 import OrderDetailPage from "../pages/orders/detail";
+import SettingsPage from "../pages/settings";
 
 export const router = createBrowserRouter([
   {
@@ -98,6 +99,10 @@ export const router = createBrowserRouter([
           {
             path: "/orders/:id",
             element: <OrderDetailPage />,
+          },
+          {
+            path: "/settings",
+            element: <SettingsPage />,
           },
         ],
       },
