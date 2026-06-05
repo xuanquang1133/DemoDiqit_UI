@@ -28,6 +28,14 @@ export default function LoginPage() {
       const token = userData.access_token;
       
       if (token) {
+        // Restrict login to users with admin role
+        const hasAdminRole = userData.roles?.some((role: string) => role.toLowerCase() === 'admin');
+        if (!hasAdminRole) {
+          setError('Tài khoản không có quyền truy cập vào trang quản trị!');
+          setIsLoading(false);
+          return;
+        }
+
         // Prepare User object for Context
         const userForContext = {
           id: userData.id,
