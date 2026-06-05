@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 
 export default function CategoryListPage() {
   const { page, setPage } = usePaginationHistory({ scope: "categories" });
-  const limit = 10;
+  const limit = Number(localStorage.getItem("default_limit") || 10);
 
   const [data, setData] = useState<PaginatedData<Category> | null>(null);
   const [loading, setLoading] = useState(false);

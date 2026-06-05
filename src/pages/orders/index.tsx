@@ -13,7 +13,7 @@ export default function OrderListPage() {
   const [, setSearchParams] = useSearchParams();
 
   const { page, setPage } = usePaginationHistory({ scope: "orders" });
-  const limit = 10;
+  const limit = Number(localStorage.getItem("default_limit") || 10);
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [total, setTotal] = useState(0);

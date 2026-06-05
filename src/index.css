@@ -1,2 +1,74 @@
 @import "tailwindcss";
 @config "../tailwind.config.ts";
+
+/* Custom theme variables */
+:root {
+  --primary-color: #3b82f6; /* default blue */
+  --primary-hover: #2563eb;
+  --primary-light: #eff6ff;
+  --primary-text: #1d4ed8;
+}
+
+[data-theme="indigo"] {
+  --primary-color: #6366f1; /* Indigo-500 */
+  --primary-hover: #4f46e5; /* Indigo-600 */
+  --primary-light: #f5f3ff; /* Indigo-50 light */
+  --primary-text: #4f46e5;
+}
+
+[data-theme="slate"] {
+  --primary-color: #334155; /* Slate-700 */
+  --primary-hover: #1e293b; /* Slate-800 */
+  --primary-light: #f8fafc; /* Slate-50 */
+  --primary-text: #1e293b;
+}
+
+[data-theme="teal"] {
+  --primary-color: #0d9488; /* Teal-600 */
+  --primary-hover: #0f766e; /* Teal-700 */
+  --primary-light: #f0fdfa; /* Teal-50 */
+  --primary-text: #0d9488;
+}
+
+/* Apply overrides when theme is customized */
+[data-theme] .bg-blue-600,
+[data-theme] button.bg-slate-950,
+[data-theme] .bg-slate-950 {
+  background-color: var(--primary-color) !important;
+}
+
+[data-theme] .hover\:bg-blue-700:hover,
+[data-theme] button.bg-slate-950:hover,
+[data-theme] .bg-slate-950:hover {
+  background-color: var(--primary-hover) !important;
+}
+
+[data-theme] .text-blue-600,
+[data-theme] .text-blue-700 {
+  color: var(--primary-text) !important;
+}
+
+[data-theme] .hover\:text-blue-800:hover {
+  color: var(--primary-hover) !important;
+}
+
+[data-theme] .bg-blue-50 {
+  background-color: var(--primary-light) !important;
+}
+
+[data-theme] .border-blue-200 {
+  border-color: var(--primary-color) !important;
+}
+
+[data-theme] .text-blue-700 {
+  color: var(--primary-hover) !important;
+}
+
+/* Sidebar active overrides */
+[data-theme] .bg-slate-100 {
+  background-color: var(--primary-light) !important;
+  color: var(--primary-text) !important;
+}
+[data-theme] .bg-slate-100 span {
+  color: var(--primary-text) !important;
+}
