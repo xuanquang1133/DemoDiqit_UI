@@ -13,7 +13,7 @@ export default function OrderListPage() {
   const [, setSearchParams] = useSearchParams();
 
   const { page, setPage } = usePaginationHistory({ scope: "orders" });
-  const limit = Number(localStorage.getItem("default_limit") || 10);
+  const limit = 10;
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [total, setTotal] = useState(0);
@@ -86,12 +86,12 @@ export default function OrderListPage() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 sm:space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-start sm:items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Orders</h1>
-          <p className="mt-1 text-sm text-slate-500">Manage orders from customers</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900">Orders</h1>
+          <p className="mt-1 text-xs sm:text-sm text-slate-500">Manage orders from customers</p>
         </div>
       </div>
 

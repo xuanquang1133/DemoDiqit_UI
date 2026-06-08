@@ -178,19 +178,19 @@ export function RevenueChart({ className = "" }: RevenueChartProps) {
   return (
     <div className={`rounded-xl border border-slate-200 bg-white ${className}`}>
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-5 py-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-100 px-4 sm:px-5 py-3 sm:py-4">
         <div className="flex flex-col gap-0.5">
-          <h2 className="text-base font-semibold text-slate-800">Revenue Overview</h2>
-          <p className="text-xs text-slate-400">{formatPeriodLabel(period)} · Completed orders</p>
+          <h2 className="text-sm sm:text-base font-semibold text-slate-800">Revenue Overview</h2>
+          <p className="text-[10px] sm:text-xs text-slate-400">{formatPeriodLabel(period)} · Completed orders</p>
         </div>
 
-        {/* Filter Buttons */}
-        <div className="flex items-center gap-1.5">
+        {/* Filter Buttons - scrollable on mobile */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 -mb-1 w-full sm:w-auto">
           {FILTER_BUTTONS.map((btn) => (
             <button
               key={btn.value}
               onClick={() => handleFilterClick(btn.value)}
-              className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-150 ${
+              className={`whitespace-nowrap rounded-lg px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-medium transition-all duration-150 flex-shrink-0 ${
                 period === btn.value && !showCustom
                   ? "bg-rose-50 text-rose-600 font-semibold"
                   : "bg-slate-50 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
@@ -201,7 +201,7 @@ export function RevenueChart({ className = "" }: RevenueChartProps) {
           ))}
           <button
             onClick={() => handleFilterClick("custom")}
-            className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-150 ${
+            className={`whitespace-nowrap rounded-lg px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-medium transition-all duration-150 flex-shrink-0 ${
               showCustom || period === "custom"
                 ? "bg-rose-50 text-rose-600 font-semibold"
                 : "bg-slate-50 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
@@ -213,10 +213,10 @@ export function RevenueChart({ className = "" }: RevenueChartProps) {
       </div>
 
       {/* Summary Stats */}
-      <div className="flex gap-8 border-b border-slate-100 px-5 py-3">
+      <div className="flex flex-col xs:flex-row gap-3 xs:gap-8 border-b border-slate-100 px-4 sm:px-5 py-3">
         <div className="flex items-center gap-2">
           <TrendingUpIcon size={14} className="text-rose-500" />
-          <span className="text-[11px] text-slate-400">Total Revenue</span>
+          <span className="text-[10px] sm:text-[11px] text-slate-400">Total Revenue</span>
           {loading ? (
             <SpinnerIcon size={12} className="animate-spin text-slate-300" />
           ) : (
@@ -224,7 +224,7 @@ export function RevenueChart({ className = "" }: RevenueChartProps) {
           )}
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[11px] text-slate-400">Orders</span>
+          <span className="text-[10px] sm:text-[11px] text-slate-400">Orders</span>
           {loading ? (
             <SpinnerIcon size={12} className="animate-spin text-slate-300" />
           ) : (
@@ -234,23 +234,23 @@ export function RevenueChart({ className = "" }: RevenueChartProps) {
       </div>
 
       {/* Chart */}
-      <div className="px-5 py-4">
+      <div className="px-4 sm:px-5 py-4">
         {loading ? (
-          <div className="flex h-52 items-center justify-center">
+          <div className="flex h-40 sm:h-52 items-center justify-center">
             <SpinnerIcon size={28} className="animate-spin text-slate-300" />
           </div>
         ) : fetchError ? (
-          <div className="flex h-52 flex-col items-center justify-center gap-2 text-red-400">
+          <div className="flex h-40 sm:h-52 flex-col items-center justify-center gap-2 text-red-400">
             <TrendingUpIcon size={40} />
             <span className="text-sm">{fetchError}</span>
           </div>
         ) : chartData.every((d) => d.amount === 0) ? (
-          <div className="flex h-52 flex-col items-center justify-center gap-2 text-slate-300">
+          <div className="flex h-40 sm:h-52 flex-col items-center justify-center gap-2 text-slate-300">
             <TrendingUpIcon size={40} />
             <span className="text-sm text-slate-400">No revenue data in this period</span>
           </div>
         ) : (
-          <div className="relative h-52">
+          <div className="relative h-40 sm:h-52">
             <Line data={data} options={options} />
           </div>
         )}
@@ -258,30 +258,30 @@ export function RevenueChart({ className = "" }: RevenueChartProps) {
 
       {/* Custom Date Range */}
       {showCustom && (
-        <div className="flex flex-wrap items-center gap-2 border-t border-slate-100 px-5 py-3">
-          <label className="text-xs text-slate-500">From</label>
+        <div className="flex flex-col xs:flex-row items-start xs:items-center gap-2 border-t border-slate-100 px-4 sm:px-5 py-3">
+          <label className="text-[10px] sm:text-xs text-slate-500 whitespace-nowrap">From</label>
           <input
             type="date"
             value={customFrom}
             onChange={(e) => setCustomFrom(e.target.value)}
-            className="rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-700 transition-colors focus:border-rose-300 focus:outline-none focus:ring-1 focus:ring-rose-200"
+            className="rounded-lg border border-slate-200 px-2 py-1.5 text-[11px] sm:text-xs text-slate-700 transition-colors focus:border-rose-300 focus:outline-none focus:ring-1 focus:ring-rose-200 w-full xs:w-auto"
           />
-          <label className="text-xs text-slate-500">To</label>
+          <label className="text-[10px] sm:text-xs text-slate-500 whitespace-nowrap">To</label>
           <input
             type="date"
             value={customTo}
             onChange={(e) => setCustomTo(e.target.value)}
-            className="rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-700 transition-colors focus:border-rose-300 focus:outline-none focus:ring-1 focus:ring-rose-200"
+            className="rounded-lg border border-slate-200 px-2 py-1.5 text-[11px] sm:text-xs text-slate-700 transition-colors focus:border-rose-300 focus:outline-none focus:ring-1 focus:ring-rose-200 w-full xs:w-auto"
           />
           <button
             onClick={handleCustomApply}
             disabled={!customFrom || !customTo || customFrom > customTo}
-            className="rounded-lg bg-rose-500 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-rose-600 disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-lg bg-rose-500 px-3 py-1.5 text-[11px] sm:text-xs font-medium text-white transition-colors hover:bg-rose-600 disabled:cursor-not-allowed disabled:opacity-40 w-full xs:w-auto text-center"
           >
             Apply
           </button>
           {customFrom && customTo && customFrom > customTo && (
-            <span className="text-xs text-red-500">Start must be before end date</span>
+            <span className="text-[10px] sm:text-xs text-red-500">Start must be before end date</span>
           )}
         </div>
       )}

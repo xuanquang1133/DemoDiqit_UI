@@ -24,17 +24,17 @@ interface StatCardProps {
 
 function StatCard({ label, value, valueColor, icon, iconBg, iconColor, isLoading }: StatCardProps) {
   return (
-    <div className="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-5 transition-all duration-200 hover:border-slate-300 hover:shadow-md">
-      <div className="flex items-start justify-between">
-        <div className="flex flex-col gap-1">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+    <div className="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-4 sm:p-5 transition-all duration-200 hover:border-slate-300 hover:shadow-md">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex flex-col gap-1 min-w-0">
+          <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400">
             {label}
           </span>
           {isLoading ? (
-            <SpinnerIcon className="h-8 w-8 animate-spin text-slate-300" />
+            <SpinnerIcon className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-slate-300" />
           ) : (
             <span
-              className="text-[28px] font-bold leading-none tracking-tight"
+              className="text-xl sm:text-2xl md:text-[28px] font-bold leading-none tracking-tight truncate"
               style={{ color: valueColor }}
             >
               {value}
@@ -94,7 +94,7 @@ export function StatsOverview({ stats, loading = false }: StatsOverviewProps) {
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
       {statCards.map((card) => (
         <StatCard
           key={card.label}

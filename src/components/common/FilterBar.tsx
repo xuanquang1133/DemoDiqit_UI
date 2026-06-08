@@ -16,10 +16,10 @@ export function FilterBar({
   showSearch = true,
 }: FilterBarProps) {
   return (
-    <div className="bg-white rounded-lg border border-slate-200 p-4">
-      <div className="flex flex-wrap gap-4 items-center">
+    <div className="bg-white rounded-lg border border-slate-200 p-3 sm:p-4">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
         {showSearch && (
-          <div className="relative flex-grow max-w-md">
+          <div className="relative flex-grow w-full sm:max-w-xs md:max-w-md">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -45,7 +45,11 @@ export function FilterBar({
             />
           </div>
         )}
-        {children}
+        {children && (
+          <div className="flex flex-wrap gap-2 sm:gap-3 items-center">
+            {children}
+          </div>
+        )}
       </div>
     </div>
   );

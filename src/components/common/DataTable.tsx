@@ -6,6 +6,8 @@ export interface DataTableColumn<T> {
   width?: string;
   align?: "left" | "center" | "right";
   render?: (item: T) => ReactNode;
+  /** Hide this column on screens smaller than the breakpoint. e.g. "sm" hides on mobile, "md" hides on tablet */
+  hideBelow?: "sm" | "md";
 }
 
 interface DataTableProps<T> {
@@ -34,35 +36,37 @@ export function DataTable<T>({
   if (loading) {
     return (
       <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-        <table className="min-w-full divide-y divide-slate-200">
-          <thead className="bg-slate-50">
-            <tr>
-              {columns.map((col) => (
-                <th
-                  key={col.key}
-                  className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500"
+        <div className="overflow-x-auto">
+          <table className="min-w-[700px] w-full divide-y divide-slate-200">
+            <thead className="bg-slate-50">
+              <tr>
+                {columns.map((col) => (
+                  <th
+                    key={col.key}
+                    className="px-3 sm:px-4 py-2.5 sm:py-3 text-left text-[10px] sm:text-xs font-medium uppercase tracking-wider text-slate-500"
+                  >
+                    {col.header}
+                  </th>
+                ))}
+                {actions && (
+                  <th className="px-3 sm:px-4 py-2.5 sm:py-3 text-right text-[10px] sm:text-xs font-medium uppercase tracking-wider text-slate-500">
+                    Actions
+                  </th>
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td
+                  colSpan={columns.length + (actions ? 1 : 0)}
+                  className="px-3 sm:px-4 py-8 sm:py-12 text-center text-xs sm:text-sm text-slate-500"
                 >
-                  {col.header}
-                </th>
-              ))}
-              {actions && (
-                <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-slate-500">
-                  Actions
-                </th>
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td
-                colSpan={columns.length + (actions ? 1 : 0)}
-                className="px-4 py-12 text-center text-sm text-slate-500"
-              >
-                {loadingMessage}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                  {loadingMessage}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
@@ -70,20 +74,26 @@ export function DataTable<T>({
   return (
     <div className={`overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm ${className}`}>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-slate-200">
+        <table className="min-w-[700px] w-full divide-y divide-slate-200">
           <thead className="bg-slate-50">
             <tr>
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500"
+                  className={
+                    col.hideBelow === "sm"
+                      ? "hidden sm:table-cell px-3 sm:px-4 py-2.5 sm:py-3 text-left text-[10px] sm:text-xs font-medium uppercase tracking-wider text-slate-500"
+                      : col.hideBelow === "md"
+                      ? "hidden md:table-cell px-3 sm:px-4 py-2.5 sm:py-3 text-left text-[10px] sm:text-xs font-medium uppercase tracking-wider text-slate-500"
+                      : "px-3 sm:px-4 py-2.5 sm:py-3 text-left text-[10px] sm:text-xs font-medium uppercase tracking-wider text-slate-500"
+                  }
                   style={{ width: col.width }}
                 >
                   {col.header}
                 </th>
               ))}
               {actions && (
-                <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-slate-500">
+                <th className="px-3 sm:px-4 py-2.5 sm:py-3 text-right text-[10px] sm:text-xs font-medium uppercase tracking-wider text-slate-500">
                   Actions
                 </th>
               )}
@@ -94,7 +104,7 @@ export function DataTable<T>({
               <tr>
                 <td
                   colSpan={columns.length + (actions ? 1 : 0)}
-                  className="px-4 py-12 text-center text-sm text-slate-500"
+                  className="px-3 sm:px-4 py-8 sm:py-12 text-center text-xs sm:text-sm text-slate-500"
                 >
                   {emptyMessage}
                 </td>
@@ -111,14 +121,20 @@ export function DataTable<T>({
                   {columns.map((col) => (
                     <td
                       key={col.key}
-                      className="px-4 py-3 text-sm text-slate-600 whitespace-nowrap"
+                      className={
+                        col.hideBelow === "sm"
+                          ? "hidden sm:table-cell px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-slate-600 whitespace-nowrap"
+                          : col.hideBelow === "md"
+                          ? "hidden md:table-cell px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-slate-600 whitespace-nowrap"
+                          : "px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-slate-600 whitespace-nowrap"
+                      }
                       style={{ textAlign: col.align }}
                     >
                       {col.render ? col.render(item) : String((item as Record<string, unknown>)[col.key] ?? "")}
                     </td>
                   ))}
                   {actions && (
-                    <td className="px-4 py-3 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                    <td className="px-3 sm:px-4 py-2.5 sm:py-3 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                       {actions(item)}
                     </td>
                   )}
