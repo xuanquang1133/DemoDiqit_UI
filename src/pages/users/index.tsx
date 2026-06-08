@@ -121,10 +121,12 @@ export default function UserListPage() {
     {
       key: "email",
       header: "Email",
+      hideBelow: "sm",
     },
     {
       key: "roles",
       header: "Role",
+      hideBelow: "md",
       render: (user) => <span>{user.roles?.join(", ")}</span>,
     },
     {
@@ -140,6 +142,7 @@ export default function UserListPage() {
     {
       key: "created_at",
       header: "Created",
+      hideBelow: "md",
       render: (user) => (
         <span>{new Date(user.created_at).toISOString().split("T")[0]}</span>
       ),
@@ -149,10 +152,10 @@ export default function UserListPage() {
   return (
     <div className="p-6 space-y-4 bg-slate-50/50 min-h-screen">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Users Management</h1>
-          <p className="text-sm text-slate-500 mt-1">Total: {data?.total || 0} users</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900">Users Management</h1>
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">Total: {data?.total || 0} users</p>
         </div>
         <AddButton label="Add User" navigateTo="/users/create" />
       </div>

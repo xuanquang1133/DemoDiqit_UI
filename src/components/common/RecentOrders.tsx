@@ -30,33 +30,33 @@ export function RecentOrders({ orders, loading = false }: RecentOrdersProps) {
   const navigate = useNavigate();
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white">
-      <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-        <h2 className="text-base font-semibold text-slate-800">Recent Orders</h2>
+    <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+      <div className="flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 border-b border-slate-100">
+        <h2 className="text-sm sm:text-base font-semibold text-slate-800">Recent Orders</h2>
         <button
           onClick={() => navigate("/orders")}
-          className="text-xs font-medium text-rose-500 transition-colors hover:text-rose-600"
+          className="text-[11px] sm:text-xs font-medium text-rose-500 transition-colors hover:text-rose-600"
         >
           View all →
         </button>
       </div>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-slate-100">
+        <table className="min-w-[700px] w-full divide-y divide-slate-100">
           <thead>
             <tr className="bg-slate-50">
-              <th className="whitespace-nowrap px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+              <th className="whitespace-nowrap px-3 sm:px-4 py-2.5 sm:py-3 text-left text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-slate-500">
                 Order ID
               </th>
-              <th className="whitespace-nowrap px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+              <th className="whitespace-nowrap px-3 sm:px-4 py-2.5 sm:py-3 text-left text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-slate-500 hidden sm:table-cell">
                 Customer
               </th>
-              <th className="whitespace-nowrap px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+              <th className="whitespace-nowrap px-3 sm:px-4 py-2.5 sm:py-3 text-left text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-slate-500 hidden md:table-cell">
                 Product
               </th>
-              <th className="whitespace-nowrap px-4 py-3 text-right text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+              <th className="whitespace-nowrap px-3 sm:px-4 py-2.5 sm:py-3 text-right text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-slate-500">
                 Amount
               </th>
-              <th className="whitespace-nowrap px-4 py-3 text-center text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+              <th className="whitespace-nowrap px-3 sm:px-4 py-2.5 sm:py-3 text-center text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-slate-500">
                 Status
               </th>
             </tr>
@@ -64,18 +64,19 @@ export function RecentOrders({ orders, loading = false }: RecentOrdersProps) {
           <tbody className="divide-y divide-slate-100">
             {loading ? (
               <tr>
-                <td colSpan={5} className="px-4 py-12">
+                <td colSpan={5} className="px-4 py-8 sm:py-12">
                   <div className="flex items-center justify-center">
-                    <SpinnerIcon className="h-6 w-6 animate-spin text-slate-300" />
+                    <SpinnerIcon className="h-5 w-5 sm:h-6 sm:w-6 animate-spin text-slate-300" />
                   </div>
                 </td>
               </tr>
             ) : orders.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-4 py-12">
+                <td colSpan={5} className="px-4 py-8 sm:py-12">
                   <div className="flex flex-col items-center justify-center gap-2 text-slate-300">
-                    <ShoppingCartIcon size={36} />
-                    <span className="text-sm text-slate-400">No orders yet</span>
+                    <ShoppingCartIcon size={28} className="sm:hidden" />
+                    <ShoppingCartIcon size={36} className="hidden sm:block" />
+                    <span className="text-xs sm:text-sm text-slate-400">No orders yet</span>
                   </div>
                 </td>
               </tr>
@@ -86,19 +87,19 @@ export function RecentOrders({ orders, loading = false }: RecentOrdersProps) {
                   className="cursor-pointer transition-colors hover:bg-slate-50"
                   onClick={() => navigate(`/orders/${order.order_number}`)}
                 >
-                  <td className="whitespace-nowrap px-4 py-3 text-sm font-medium text-slate-700">
+                  <td className="whitespace-nowrap px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-medium text-slate-700">
                     #{order.order_number}
                   </td>
-                  <td className="whitespace-nowrap px-4 py-3 text-sm text-slate-600">
+                  <td className="whitespace-nowrap px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-slate-600 hidden sm:table-cell">
                     {order.customer_name}
                   </td>
-                  <td className="whitespace-nowrap px-4 py-3 text-sm text-slate-500">
+                  <td className="whitespace-nowrap px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-slate-500 hidden md:table-cell">
                     {order.product_name || "-"}
                   </td>
-                  <td className="whitespace-nowrap px-4 py-3 text-right text-sm font-medium text-slate-700">
+                  <td className="whitespace-nowrap px-3 sm:px-4 py-2.5 sm:py-3 text-right text-xs sm:text-sm font-medium text-slate-700">
                     {formatPrice(order.total_amount)}
                   </td>
-                  <td className="whitespace-nowrap px-4 py-3 text-center">
+                  <td className="whitespace-nowrap px-3 sm:px-4 py-2.5 sm:py-3 text-center">
                     {getStatusBadge(order.status)}
                   </td>
                 </tr>

@@ -26,105 +26,108 @@ export function ProductTable({
 
   return (
     <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-      <table className="min-w-full divide-y divide-slate-200">
-        <thead className="bg-slate-50">
-          <tr>
-            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
-              Product
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
-              Category
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
-              SKU
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
-              Price
-            </th>
-            <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">
-              Status
-            </th>
-            <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-slate-500">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-slate-200">
-          {products.length === 0 ? (
-            <tr>
-              <td
-                colSpan={6}
-                className="px-4 py-8 text-center text-sm text-slate-500"
-              >
-                No products found
-              </td>
+      <div className="overflow-x-auto">
+        <table className="min-w-[700px] w-full divide-y divide-slate-200">
+          <thead className="bg-slate-50">
+            <tr className="whitespace-nowrap">
+              <th className="px-3 sm:px-4 py-2.5 sm:py-3 text-left text-[10px] sm:text-xs font-medium uppercase tracking-wider text-slate-500">
+                Product
+              </th>
+              <th className="px-3 sm:px-4 py-2.5 sm:py-3 text-left text-[10px] sm:text-xs font-medium uppercase tracking-wider text-slate-500 hidden sm:table-cell">
+                Category
+              </th>
+              <th className="px-3 sm:px-4 py-2.5 sm:py-3 text-left text-[10px] sm:text-xs font-medium uppercase tracking-wider text-slate-500 hidden md:table-cell">
+                SKU
+              </th>
+              <th className="px-3 sm:px-4 py-2.5 sm:py-3 text-left text-[10px] sm:text-xs font-medium uppercase tracking-wider text-slate-500 hidden lg:table-cell">
+                Price
+              </th>
+              <th className="px-3 sm:px-4 py-2.5 sm:py-3 text-left text-[10px] sm:text-xs font-medium uppercase tracking-wider text-slate-500">
+                Status
+              </th>
+              <th className="px-3 sm:px-4 py-2.5 sm:py-3 text-right text-[10px] sm:text-xs font-medium uppercase tracking-wider text-slate-500">
+                Actions
+              </th>
             </tr>
-          ) : (
-            products.map((product) => (
-              <tr key={product.id} className="hover:bg-slate-50">
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-3">
-                    {product.thumbnail ? (
-                      <img
-                        src={product.thumbnail}
-                        alt={product.name}
-                        className="h-10 w-10 rounded-lg object-cover"
-                        onError={(e) => {
-                          (
-                            e.target as HTMLImageElement
-                          ).src = "https://via.placeholder.com/40";
-                        }}
-                      />
-                    ) : (
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-400">
-                        <ImageIcon size={20} />
-                      </div>
-                    )}
-                    <div className="min-w-0 max-w-[240px]">
-                      <p className="text-sm font-medium text-slate-900 truncate" title={product.name}>
-                        {product.name}
-                      </p>
-                      <p className="text-xs text-slate-500 truncate" title={product.description}>
-                        {product.description || "No description"}
-                      </p>
-                    </div>
-                  </div>
-                </td>
-                <td className="whitespace-nowrap px-4 py-3 text-sm text-slate-600">
-                  {product.category ? (
-                    <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">
-                      {product.category.name}
-                    </span>
-                  ) : (
-                    <span className="text-xs text-slate-400">—</span>
-                  )}
-                </td>
-                <td className="whitespace-nowrap px-4 py-3 text-sm text-slate-600">
-                  {product.sku || "-"}
-                </td>
-                <td className="whitespace-nowrap px-4 py-3 text-sm">
-                  <p className="font-medium text-slate-900">
-                    {Number(product.price).toLocaleString()} VND
-                  </p>
-                </td>
-                <td className="whitespace-nowrap px-4 py-3">
-                  <SwitchButton
-                    checked={product.is_active}
-                    onChange={() => onToggleStatus(product)}
-                  />
-                </td>
-                <td className="whitespace-nowrap px-4 py-3 text-right text-sm">
-                  <TableActions
-                    onDetail={() => onViewDetail(product)}
-                    onEdit={() => onEdit(product)}
-                    onDelete={() => onDelete(product)}
-                  />
+          </thead>
+          <tbody className="divide-y divide-slate-200">
+            {products.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={6}
+                  className="px-4 py-8 text-center text-sm text-slate-500"
+                >
+                  No products found
                 </td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+            ) : (
+              products.map((product) => (
+                <tr key={product.id} className="hover:bg-slate-50">
+                  <td className="px-3 sm:px-4 py-2.5 sm:py-3">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      {product.thumbnail ? (
+                        <img
+                          src={product.thumbnail}
+                          alt={product.name}
+                          className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg object-cover flex-shrink-0"
+                          onError={(e) => {
+                            (
+                              e.target as HTMLImageElement
+                            ).src = "https://via.placeholder.com/40";
+                          }}
+                        />
+                      ) : (
+                        <div className="h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center rounded-lg bg-slate-100 text-slate-400 flex-shrink-0">
+                          <ImageIcon size={16} className="sm:!hidden" />
+                          <ImageIcon size={20} className="hidden sm:block" />
+                        </div>
+                      )}
+                      <div className="min-w-0 max-w-[120px] sm:max-w-[200px] md:max-w-[240px]">
+                        <p className="text-xs sm:text-sm font-medium text-slate-900 truncate" title={product.name}>
+                          {product.name}
+                        </p>
+                        <p className="text-[10px] sm:text-xs text-slate-500 truncate hidden sm:block" title={product.description}>
+                          {product.description || "No description"}
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="whitespace-nowrap px-3 sm:px-4 py-2.5 sm:py-3 hidden sm:table-cell">
+                    {product.category ? (
+                      <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-0.5 text-[10px] sm:text-xs font-medium text-blue-700">
+                        {product.category.name}
+                      </span>
+                    ) : (
+                      <span className="text-[10px] sm:text-xs text-slate-400">—</span>
+                    )}
+                  </td>
+                  <td className="whitespace-nowrap px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-slate-600 hidden md:table-cell">
+                    {product.sku || "-"}
+                  </td>
+                  <td className="whitespace-nowrap px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm hidden lg:table-cell">
+                    <p className="font-medium text-slate-900">
+                      {Number(product.price).toLocaleString()} VND
+                    </p>
+                  </td>
+                  <td className="whitespace-nowrap px-3 sm:px-4 py-2.5 sm:py-3">
+                    <SwitchButton
+                      checked={product.is_active}
+                      onChange={() => onToggleStatus(product)}
+                    />
+                  </td>
+                  <td className="whitespace-nowrap px-3 sm:px-4 py-2.5 sm:py-3 text-right text-xs sm:text-sm">
+                    <TableActions
+                      onDetail={() => onViewDetail(product)}
+                      onEdit={() => onEdit(product)}
+                      onDelete={() => onDelete(product)}
+                    />
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
