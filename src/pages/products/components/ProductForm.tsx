@@ -7,6 +7,7 @@ import { generateSlug, generateSKU } from "../../../utils/slugify";
 import type { Product, CreateProductRequest, UpdateProductRequest } from "../../../types/product";
 import type { Category } from "../../../types/category";
 import { categoryApi } from "../../../api/category";
+import { createProduct, updateProduct } from "../../../api/product";
 
 interface ProductFormData {
   name: string;
@@ -184,7 +185,6 @@ export default function ProductForm({
 
     try {
       if (mode === "create") {
-        const { createProduct } = await import("../../../api/product");
         const payload: CreateProductRequest = {
           name: formData.name,
           slug: formData.slug,
@@ -197,7 +197,6 @@ export default function ProductForm({
         };
         await createProduct(payload);
       } else {
-        const { updateProduct } = await import("../../../api/product");
         if (initialData) {
           await updateProduct(initialData.id, buildPayload());
         }
