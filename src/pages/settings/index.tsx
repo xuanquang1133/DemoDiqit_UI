@@ -1,3 +1,4 @@
+// Settings page
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { userApi } from "../../api/user";
